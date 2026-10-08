@@ -75,6 +75,8 @@ export interface BaseEntity {
   asset?: Asset;
   /** Seed for the placeholder art generator. */
   art?: ArtVariant;
+  /** Japanese name or term, shown beside the English one. */
+  ja?: string;
   /** Exact Berserk Wiki article title when it differs from `name`. */
   wiki?: string;
 }

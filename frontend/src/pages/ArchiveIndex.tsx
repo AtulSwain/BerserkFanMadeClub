@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Page, PageHead, Reveal } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { InkArt } from '@/art/InkArt';
 import { CanonLegend } from '@/components/Canon';
 import { INDEX } from '@/lib/sections';
@@ -31,7 +32,7 @@ export default function ArchiveIndex() {
                   )}
                   <div className="toc__text">
                     <span className="toc__no">{s.no}</span>
-                    <span className="toc__title">{s.title}</span>
+                    <span className="toc__title">{s.title} <Ja className="toc__ja">{s.ja}</Ja></span>
                     <span className="toc__blurb">{s.blurb}</span>
                     <span className="toc__pg">p. {s.page}</span>
                   </div>

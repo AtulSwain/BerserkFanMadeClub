@@ -1,7 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { Page, Reveal, Xref, XrefList } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactList, CanonTag, SourceMarks } from '@/components/Canon';
-import { Spoiler } from '@/components/Spoiler';
+import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { archive, nameOf } from '@/data/archive';
@@ -14,6 +15,7 @@ const PANEL_SHAPES = ['ev-p--wide', 'ev-p--tall', 'ev-p--sq', 'ev-p--sq', 'ev-p-
 export default function EventView() {
   const { id } = useParams();
   const ev = archive.get(id ?? '') as StoryEvent | undefined;
+  const kanjiHidden = useIsHidden(ev?.spoiler);
   if (!ev || ev.kind !== 'event') return <NotFound />;
   const all = archive.events();
   const idx = all.indexOf(ev);
@@ -28,6 +30,7 @@ export default function EventView() {
             <InkArt variant={ev.art} seed={ev.id} showCredit={false} />
           </Spoiler>
         </div>
+        {!kanjiHidden && <Ja vertical className="ev-hero__kanji">{ev.ja}</Ja>}
         <div className="ev-hero__text">
           <span className="label">Event · {nameOf(ev.arc)}</span>
           <h1 className="ev-hero__title">

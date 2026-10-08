@@ -45,3 +45,25 @@ export function ChapterMark({ no }: { no: string }) {
     </span>
   );
 }
+
+/** A Japanese name or term set beside its English counterpart. */
+export function Ja({ children, vertical = false, className = '' }: { children?: ReactNode; vertical?: boolean; className?: string }) {
+  if (!children) return null;
+  return (
+    <span lang="ja" className={`ja ${vertical ? 'ja--v' : ''} ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+/**
+ * Hanko — a red name seal. Characters run top-to-bottom, right-to-left,
+ * the way a carved seal reads.
+ */
+export function Hanko({ text, size = 64, className = '' }: { text: string; size?: number; className?: string }) {
+  return (
+    <span lang="ja" className={`hanko ${className}`} style={{ width: size, height: size, fontSize: size * (text.length > 2 ? 0.3 : 0.42) }} aria-hidden="true">
+      <span className="hanko__text">{text}</span>
+    </span>
+  );
+}

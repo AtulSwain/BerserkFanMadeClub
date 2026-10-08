@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, XrefList } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
@@ -44,7 +45,10 @@ export default function Weapons() {
             <div>
               <span className="label">Plate {code} · {w.epithet}</span>
               <h2 className="plate-sheet__name">
-                <Spoiler level={w.spoiler}>{w.name}</Spoiler>
+                <Spoiler level={w.spoiler}>
+                  {w.name}
+                  <Ja className="ja-sub">{w.ja}</Ja>
+                </Spoiler>
               </h2>
             </div>
             <CanonTag c={w.canon} />

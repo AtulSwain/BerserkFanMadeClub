@@ -4,22 +4,22 @@ import { useSpoilers, SPOILER_LABELS, SPOILER_HINTS } from '@/context/SpoilerCon
 import type { SpoilerLevel } from '@/data/types';
 import { INDEX } from '@/lib/sections';
 
-export const TABS: { to: string; label: string; no: string; match: string[] }[] = [
-  { to: '/archive', label: 'Index', no: '00', match: ['/archive', '/sources', '/glossary'] },
-  { to: '/characters', label: 'Characters', no: '03', match: ['/characters', '/relationships', '/factions'] },
-  { to: '/lore', label: 'World', no: '11', match: ['/lore', '/atlas', '/apostles', '/god-hand', '/creatures'] },
-  { to: '/weapons', label: 'Weapons', no: '07', match: ['/weapons'] },
-  { to: '/chronology', label: 'Chronology', no: '02', match: ['/chronology', '/events'] },
-  { to: '/volumes', label: 'Manga', no: '12', match: ['/volumes', '/craft', '/panel-lab', '/cinematography'] },
-  { to: '/anime', label: 'Anime', no: '13', match: ['/anime', '/compare', '/music'] },
-  { to: '/production', label: 'Production', no: '15', match: ['/production', '/origins'] },
+export const TABS: { to: string; label: string; ja: string; no: string; match: string[] }[] = [
+  { to: '/archive', label: 'Index', ja: '目次', no: '00', match: ['/archive', '/sources', '/glossary'] },
+  { to: '/characters', label: 'Characters', ja: '人物', no: '03', match: ['/characters', '/relationships', '/factions'] },
+  { to: '/lore', label: 'World', ja: '世界', no: '11', match: ['/lore', '/atlas', '/apostles', '/god-hand', '/creatures'] },
+  { to: '/weapons', label: 'Weapons', ja: '武器', no: '07', match: ['/weapons'] },
+  { to: '/chronology', label: 'Chronology', ja: '年表', no: '02', match: ['/chronology', '/events'] },
+  { to: '/volumes', label: 'Manga', ja: '漫画', no: '12', match: ['/volumes', '/craft', '/panel-lab', '/cinematography'] },
+  { to: '/anime', label: 'Anime', ja: 'アニメ', no: '13', match: ['/anime', '/compare', '/music'] },
+  { to: '/production', label: 'Production', ja: '制作', no: '15', match: ['/production', '/origins'] },
 ];
 
 function SpoilerControl({ compact = false }: { compact?: boolean }) {
   const { level, setLevel } = useSpoilers();
   return (
     <div className={`spoiler-control ${compact ? 'spoiler-control--compact' : ''}`} role="radiogroup" aria-label="Spoiler level">
-      <span className="spoiler-control__label">Spoilers</span>
+      <span className="spoiler-control__label">Spoilers <span lang="ja" className="ja">ネタバレ</span></span>
       {([0, 1, 2] as SpoilerLevel[]).map((l) => (
         <button
           key={l}
@@ -67,7 +67,7 @@ export function Nav({ onSearch }: { onSearch: () => void }) {
             return (
               <li key={t.to}>
                 <NavLink to={t.to} className={`edge-tab ${active ? 'is-active' : ''}`} aria-current={active ? 'page' : undefined}>
-                  <span className="edge-tab__no">{t.no}</span>
+                  <span className="edge-tab__no">{t.no} <span lang="ja" className="edge-tab__ja">{t.ja}</span></span>
                   <span className="edge-tab__label">{t.label}</span>
                 </NavLink>
               </li>
@@ -94,7 +94,7 @@ export function Nav({ onSearch }: { onSearch: () => void }) {
       <div id="contents-drawer" className={`contents-drawer ${open ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Contents" hidden={!open}>
         <div className="contents-drawer__page">
           <div className="contents-drawer__head">
-            <span className="label label--ink">Contents</span>
+            <span className="label label--ink">Contents · <span lang="ja" className="ja">目次</span></span>
             <button type="button" className="bracket" onClick={() => setOpen(false)}>
               <span>Close</span>
             </button>
@@ -113,7 +113,7 @@ export function Nav({ onSearch }: { onSearch: () => void }) {
               <li key={s.no}>
                 <Link to={s.to}>
                   <span className="contents-drawer__no">{s.no}</span>
-                  <span className="contents-drawer__name">{s.title}</span>
+                  <span className="contents-drawer__name">{s.title} <span lang="ja" className="ja contents-drawer__ja">{s.ja}</span></span>
                   <span className="contents-drawer__leader" />
                   <span className="contents-drawer__pg">{s.page}</span>
                 </Link>

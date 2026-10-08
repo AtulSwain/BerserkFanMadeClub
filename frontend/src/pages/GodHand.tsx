@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Page, Xref } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactLine, FactList, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
@@ -69,6 +70,7 @@ function Position({ m }: { m: GodHandMember }) {
       </span>
       <span className="gh-pos__reveal">
         <span className="gh-pos__name">{hidden ? '—' : m.name}</span>
+        {!hidden && <Ja className="gh-pos__ja">{m.ja}</Ja>}
         <span className="gh-pos__aspect">{hidden ? 'Hidden at your spoiler level' : m.aspect}</span>
         {!hidden && <span className="gh-pos__sum">{m.summary}</span>}
       </span>
@@ -98,7 +100,10 @@ function FullDossier({ m, onClose }: { m: GodHandMember; onClose: () => void }) 
       <div className="gh-dossier__body">
         <span className="label">God Hand · Position {NUMERALS[m.position - 1]}</span>
         <h2 className="gh-dossier__name">
-          <Spoiler level={m.spoiler} block>{m.name}</Spoiler>
+          <Spoiler level={m.spoiler} block>
+            {m.name}
+            <Ja className="ja-sub">{m.ja}</Ja>
+          </Spoiler>
         </h2>
         <p className="gh-dossier__aspect">
           <Spoiler level={m.spoiler}>{m.aspect}</Spoiler>

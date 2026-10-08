@@ -3,7 +3,7 @@ import { InkArt } from '@/art/InkArt';
 import { Page, Reveal, InkRule } from '@/components/Page';
 import { CanonTag } from '@/components/Canon';
 import { useOpenArchive } from '@/context/OpenArchive';
-import { Balloon } from '@/components/Manga';
+import { Balloon, Hanko, Ja } from '@/components/Manga';
 import { INDEX } from '@/lib/sections';
 
 export default function Home() {
@@ -22,6 +22,7 @@ export default function Home() {
           <div className="cover__colophon-bottom">
             <span className="label">Vol. ∞ · Fan edition</span>
             <span className="label">Unofficial · non-commercial</span>
+            <Hanko text="蔵" size={44} className="cover__seal" />
           </div>
         </aside>
 
@@ -41,6 +42,7 @@ export default function Home() {
               <br />
               <em>of the Black Swordsman</em>
             </p>
+            <Hanko text="狂戦士" size={74} className="cover__hanko" />
             <span className="annot cover__annot">a fan archive —<br />not an official publication</span>
           </div>
 
@@ -102,6 +104,11 @@ export default function Home() {
               </p>
             </Reveal>
             <span className="margin-note">Read the index first.<br />Then follow the threads.</span>
+            <div className="signoff">
+              <span className="hand">— the editors</span>
+              <Ja>編集部</Ja>
+              <Hanko text="蔵" size={52} />
+            </div>
           </div>
         </div>
       </Page>
@@ -116,7 +123,7 @@ export default function Home() {
               <Reveal as="li" key={s.no} delay={i * 50}>
                 <Link to={s.to} className="home-contents__item">
                   <span className="home-contents__no">{s.no}</span>
-                  <span className="home-contents__name">{s.title}</span>
+                  <span className="home-contents__name">{s.title} <Ja className="home-contents__ja">{s.ja}</Ja></span>
                   <span className="home-contents__blurb">{s.blurb}</span>
                   <span className="home-contents__pg">p. {s.page}</span>
                 </Link>

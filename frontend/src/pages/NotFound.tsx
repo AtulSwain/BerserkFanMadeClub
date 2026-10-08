@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Page } from '@/components/Page';
-import { Balloon } from '@/components/Manga';
+import { Balloon, Stamp } from '@/components/Manga';
 
 export default function NotFound() {
   return (
     <Page chapter="Missing page" folio={0}>
       <div className="notfound">
         <span className="label">Error · page torn out</span>
+        <Stamp className="notfound__stamp">
+          <span lang="ja" className="ja">落丁</span> · missing page
+        </Stamp>
         <h1 className="chapter-title">
           This page<br />
           <em>was torn out.</em>

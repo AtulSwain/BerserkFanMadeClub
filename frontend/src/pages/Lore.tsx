@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, XrefList } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
@@ -60,7 +61,10 @@ export default function Lore() {
             <header>
               <span className="label">Folio {ROMAN[entries.indexOf(e)]} · {e.epithet}</span>
               <h2 className="folio-entry__title">
-                <Spoiler level={e.spoiler} block>{e.name}</Spoiler>
+                <Spoiler level={e.spoiler} block>
+                  {e.name}
+                  <Ja className="ja-sub">{e.ja}</Ja>
+                </Spoiler>
               </h2>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <span className="label">Canon status</span>
@@ -110,6 +114,7 @@ export default function Lore() {
                   <span className="manuscript__card-name">
                     <Spoiler level={x.spoiler}>{x.name}</Spoiler>
                   </span>
+                  {x.spoiler === 0 && <Ja className="manuscript__card-ja">{x.ja}</Ja>}
                   <span className="manuscript__card-ep">{x.epithet}</span>
                   <CanonTag c={x.canon} />
                 </Link>

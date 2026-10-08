@@ -34,6 +34,7 @@ import { locations, factions, creatures, glossary, creators } from './world';
 import { anime, music, craft } from './media';
 import { volumes } from './volumes';
 import { sources, sourceById } from './sources';
+import { JA } from './ja';
 
 export interface ArchiveRepository {
   characters(): Character[];
@@ -81,6 +82,7 @@ const all: AnyEntity[] = [
 
 const byId = new Map<string, AnyEntity>();
 for (const e of all) {
+  if (!e.ja && JA[e.id]) e.ja = JA[e.id];
   if (import.meta.env.DEV && byId.has(e.id)) console.warn(`[archive] duplicate id: ${e.id}`);
   byId.set(e.id, e);
 }

@@ -4,7 +4,7 @@ import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
-import { Stamp } from '@/components/Manga';
+import { Ja, Stamp } from '@/components/Manga';
 import { archive, hrefFor } from '@/data/archive';
 import type { Character } from '@/data/types';
 import NotFound from './NotFound';
@@ -41,6 +41,7 @@ export default function CharacterDossier() {
             <h1 className="dossier__name">
               <Spoiler level={c.spoiler} block>
                 {c.name}
+                <Ja vertical className="dossier__ja">{c.ja}</Ja>
               </Spoiler>
             </h1>
             <p className="dossier__title">

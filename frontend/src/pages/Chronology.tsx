@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Page, PageHead, Xref, XrefList } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactLine, FactList } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { InkArt } from '@/art/InkArt';
@@ -62,7 +63,10 @@ export default function Chronology() {
             <div className="chrono__divider">
               <span className="chrono__numeral">{a.numeral}</span>
               <h2 className="chrono__name">
-                <Spoiler level={a.spoiler}>{a.name}</Spoiler>
+                <Spoiler level={a.spoiler}>
+                  {a.name}
+                  <Ja className="ja-sub">{a.ja}</Ja>
+                </Spoiler>
               </h2>
               <span className="chrono__bar" aria-hidden="true" />
               <span className="label">{a.volumes}</span>

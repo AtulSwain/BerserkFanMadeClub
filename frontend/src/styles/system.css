@@ -1027,3 +1027,63 @@
 .wiki-link:hover .wiki-link__site {
   color: var(--white-ink);
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Japanese — names, labels, seals
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --font-ja: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
+}
+.ja {
+  font-family: var(--font-ja);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  font-style: normal;
+  text-transform: none;
+}
+.ja--v {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.18em;
+}
+.ja-sub {
+  display: block;
+  font-size: 15px;
+  color: var(--blood);
+  margin-top: 6px;
+}
+
+.hanko {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  background: #a11d16;
+  color: var(--paper);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 3px #a11d16, inset 0 0 0 5px var(--paper);
+  transform: rotate(-4deg);
+  -webkit-mask-image: var(--mottle);
+  mask-image: var(--mottle);
+  -webkit-mask-size: 90px;
+  mask-size: 90px;
+  opacity: 0.92;
+}
+.hanko__text {
+  writing-mode: vertical-rl;
+  font-family: var(--font-brush);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  max-height: 86%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  text-align: center;
+}
+
+/* reference mark ※ used for editorial notes in Japanese editions */
+.margin-note::before {
+  content: '※ ';
+  font-family: var(--font-ja);
+}

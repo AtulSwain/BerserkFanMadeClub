@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, Xref, XrefList } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { FactLine, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
@@ -97,7 +98,10 @@ export default function Apostles() {
           <div className="apostle__head">
             <span className="label">Specimen {String(idx + 1).padStart(2, '0')} · {a.epithet}</span>
             <h2 className="apostle__name">
-              <Spoiler level={a.spoiler}>{a.name}</Spoiler>
+              <Spoiler level={a.spoiler}>
+                {a.name}
+                <Ja className="ja-sub">{a.ja}</Ja>
+              </Spoiler>
             </h2>
             <p className="book">
               <Spoiler level={a.spoiler}>

@@ -387,3 +387,27 @@
   align-items: center;
   justify-content: center;
 }
+
+/* kanji on the edge tabs and in the contents drawer */
+.edge-tab__ja {
+  font-family: var(--font-ja);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  margin-left: 4px;
+  color: var(--paper-aged);
+}
+.edge-tab.is-active .edge-tab__ja {
+  color: var(--white-ink);
+}
+.contents-drawer__ja {
+  font-size: 13px;
+  color: var(--blood);
+  margin-left: 6px;
+  letter-spacing: 0.2em;
+}
+.spoiler-control__label .ja {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  margin-left: 2px;
+  color: var(--paper-aged);
+}

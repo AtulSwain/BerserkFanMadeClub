@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Page, PageHead, Reveal } from '@/components/Page';
+import { Ja } from '@/components/Manga';
 import { Spoiler } from '@/components/Spoiler';
 import { InkArt } from '@/art/InkArt';
 import { archive, nameOf } from '@/data/archive';
@@ -43,6 +44,7 @@ export default function Characters() {
                 <span className="cast__name">
                   <Spoiler level={c.spoiler}>{c.name}</Spoiler>
                 </span>
+                {c.spoiler === 0 && <Ja vertical className="cast__ja">{c.ja}</Ja>}
                 <span className="cast__title annot">{c.title}</span>
               </Link>
             </Reveal>
