@@ -1,0 +1,15 @@
+{
+  "Panel credit": {
+    "scope": "json,jsonc",
+    "prefix": "credit",
+    "description": "Credit entry for an image in src/assets/panels",
+    "body": [
+      "\"${1:slot-key}\": {",
+      "  \"alt\": \"${2:What the picture shows}\",",
+      "  \"credit\": \"${3:Artist or owner}\",",
+      "  \"license\": \"${4|Used with permission,Own work,CC BY 4.0,CC BY-SA 4.0|}\",",
+      "  \"sourceUrl\": \"${5:https://}\"",
+      "}"
+    ]
+  }
+}

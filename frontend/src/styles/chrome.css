@@ -1,0 +1,413 @@
+/* ─────────────────────────────────────────────────────────────
+   Edge navigation — chapter tabs printed along the top of the book
+   ───────────────────────────────────────────────────────────── */
+.edge-nav {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: 50px;
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 0 0 0 var(--margin);
+  background: var(--ink);
+  border-bottom: 1px solid var(--graphite);
+}
+.edge-nav--home {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: linear-gradient(var(--ink), rgba(8, 8, 8, 0));
+  border-bottom-color: transparent;
+}
+.edge-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.edge-nav__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  color: var(--smoke);
+  padding-top: 2px;
+}
+.edge-nav__sigil {
+  width: 10px;
+  height: 22px;
+  background: var(--blood);
+  clip-path: polygon(50% 0, 100% 18%, 60% 100%, 40% 100%, 0 18%);
+}
+
+.edge-tabs {
+  display: flex;
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+  gap: 3px;
+}
+.edge-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 44px;
+  padding: 0 10px 7px;
+  background: var(--charcoal);
+  color: var(--paper-aged);
+  clip-path: polygon(0 0, 100% 0, 100% 86%, 92% 100%, 0 100%);
+  transition: height 0.25s var(--ease-ink), background 0.25s, color 0.25s;
+}
+.edge-tab__no {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  color: var(--smoke);
+}
+.edge-tab__label {
+  font-family: var(--font-roman);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.edge-tab:hover,
+.edge-tab:focus-visible {
+  height: 50px;
+  background: var(--graphite);
+  color: var(--white-ink);
+}
+.edge-tab.is-active {
+  height: 58px;
+  background: var(--blood);
+  color: var(--white-ink);
+}
+.edge-tab.is-active .edge-tab__no {
+  color: var(--paper);
+}
+
+.edge-nav__tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: var(--margin);
+}
+.edge-nav__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-aged);
+}
+.edge-nav__search:hover {
+  color: var(--white-ink);
+}
+.edge-nav__search kbd {
+  font-family: var(--font-mono);
+  border: 1px solid var(--ash);
+  padding: 0 5px;
+  font-size: 10px;
+  color: var(--smoke);
+}
+.edge-nav__contents {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid var(--paper-aged);
+  padding: 6px 10px;
+}
+
+.spoiler-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.spoiler-control__label {
+  color: var(--smoke);
+  margin-right: 6px;
+}
+.spoiler-control__opt {
+  padding: 4px 6px;
+  border: 1px solid var(--graphite);
+  color: var(--smoke);
+}
+.spoiler-control__opt:hover {
+  color: var(--white-ink);
+}
+.spoiler-control__opt.is-on {
+  border-color: var(--blood);
+  background: var(--blood);
+  color: var(--white-ink);
+}
+
+@media (max-width: 1220px) {
+  .edge-nav__search-label,
+  .edge-nav__search kbd {
+    display: none;
+  }
+}
+@media (max-width: 1060px) {
+  .edge-tabs,
+  .edge-nav__tools .spoiler-control {
+    display: none;
+  }
+  .edge-nav__contents {
+    display: block;
+  }
+  .edge-nav__tools {
+    margin-left: auto;
+  }
+  .edge-nav {
+    padding-left: 16px;
+  }
+  .edge-nav__tools {
+    padding-right: 16px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Contents drawer — a manga contents page
+   ───────────────────────────────────────────────────────────── */
+.contents-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(8, 8, 8, 0.6);
+  display: flex;
+  justify-content: flex-end;
+}
+.contents-drawer[hidden] {
+  display: none;
+}
+.contents-drawer__page {
+  width: min(520px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--paper);
+  background-image: var(--stain), var(--fibre);
+  color: var(--ink);
+  padding: 22px 24px 40px;
+  animation: drawer-in 0.45s var(--ease-ink) both;
+  border-left: 6px solid var(--ink);
+}
+@keyframes drawer-in {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+}
+.contents-drawer__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 6px;
+}
+.contents-drawer__title {
+  font-size: 44px;
+  text-transform: uppercase;
+  margin: 26px 0 18px;
+  line-height: 0.9;
+}
+.contents-drawer__title em {
+  font-size: 22px;
+  text-transform: none;
+  font-weight: 400;
+  color: var(--blood);
+}
+.contents-drawer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.contents-drawer__list a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(8, 8, 8, 0.15);
+}
+.contents-drawer__no {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--blood);
+  width: 22px;
+}
+.contents-drawer__name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.contents-drawer__leader {
+  flex: 1;
+  border-bottom: 1.5px dotted rgba(8, 8, 8, 0.45);
+  transform: translateY(-4px);
+}
+.contents-drawer__pg {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+}
+.contents-drawer__list a:hover .contents-drawer__name {
+  color: var(--blood);
+}
+.contents-drawer__foot {
+  margin-top: 26px;
+  display: grid;
+  gap: 14px;
+}
+.contents-drawer .spoiler-control {
+  flex-wrap: wrap;
+}
+.contents-drawer .spoiler-control__opt {
+  border-color: rgba(8, 8, 8, 0.4);
+  color: var(--ink);
+  padding: 8px 10px;
+}
+.contents-drawer .spoiler-control__opt.is-on {
+  color: var(--white-ink);
+}
+.contents-drawer .spoiler-control__label {
+  color: var(--ink);
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Search overlay — a sheet of paper slid over the page
+   ───────────────────────────────────────────────────────────── */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: rgba(8, 8, 8, 0.82);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 7vh 16px 16px;
+}
+.search-overlay__sheet {
+  width: min(860px, 100%);
+  max-height: 84vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper);
+  background-image: var(--stain), var(--fibre);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  outline: 1px solid var(--paper-aged);
+  outline-offset: 4px;
+  animation: drawer-in 0.35s var(--ease-ink) both;
+}
+.search-overlay__form {
+  padding: 18px 22px 12px;
+  border-bottom: 3px solid var(--ink);
+}
+.search-overlay__form input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 6vw, 60px);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 6px 0;
+  outline: none;
+  color: var(--ink);
+}
+.search-overlay__form input::placeholder {
+  color: rgba(8, 8, 8, 0.25);
+}
+.search-overlay__hint {
+  display: flex;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5a5245;
+}
+.search-overlay__results {
+  overflow-y: auto;
+  padding: 10px 22px 24px;
+  columns: 2 280px;
+  column-gap: 30px;
+}
+.search-group {
+  break-inside: avoid;
+  margin: 14px 0;
+}
+.search-group h3 {
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  color: var(--blood);
+}
+.search-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.search-hit {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+}
+.search-hit__name {
+  font-family: var(--font-display);
+  font-size: 21px;
+  line-height: 1.1;
+}
+.search-hit__ep {
+  font-size: 12px;
+  color: #5a5245;
+}
+.search-hit:hover .search-hit__name {
+  color: var(--blood);
+}
+
+.loading {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* kanji on the edge tabs and in the contents drawer */
+.edge-tab__ja {
+  font-family: var(--font-ja);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  margin-left: 4px;
+  color: var(--paper-aged);
+}
+.edge-tab.is-active .edge-tab__ja {
+  color: var(--white-ink);
+}
+.contents-drawer__ja {
+  font-size: 13px;
+  color: var(--blood);
+  margin-left: 6px;
+  letter-spacing: 0.2em;
+}
+.spoiler-control__label .ja {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  margin-left: 2px;
+  color: var(--paper-aged);
+}

@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Panels: update image checklist",
+      "detail": "Rescan src/assets/panels and rewrite SLOTS.md",
+      "type": "npm",
+      "script": "panels",
+      "path": "frontend",
+      "problemMatcher": []
+    },
+    {
+      "label": "Site: start dev server",
+      "detail": "Opens on http://localhost:5173 — use the yellow \"Show image names\" button",
+      "type": "npm",
+      "script": "dev",
+      "path": "frontend",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Panels: open image folder",
+      "type": "shell",
+      "command": "code frontend/src/assets/panels/SLOTS.md",
+      "problemMatcher": []
+    }
+  ]
+}
