@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ElementType, type
 import { Link } from 'react-router-dom';
 import { archive, hrefFor } from '@/data/archive';
 import { Spoiler } from './Spoiler';
+import { ChapterMark } from './Manga';
 
 type Tone = 'black' | 'paper' | 'aged' | 'abyss';
 
@@ -52,6 +53,7 @@ export function PageHead({ no, kicker, title, lede }: HeadProps) {
           <span className="label label--ink">{kicker}</span>
         </div>
         <h1 className="chapter-title">{title}</h1>
+        <ChapterMark no={no} />
       </div>
       {lede && <div className="page-head__lede">{lede}</div>}
     </div>

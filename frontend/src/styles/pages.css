@@ -434,7 +434,7 @@
 }
 .cast__art .art {
   transition: opacity 0.6s var(--ease-ink), transform 1.2s var(--ease-ink);
-  opacity: 0.18;
+  opacity: 0.42;
   transform: scale(1.06);
 }
 .cast__link::after {
@@ -2883,4 +2883,20 @@ a.register__name:hover {
   .running-head > span:first-child {
     display: none;
   }
+}
+
+/* cover lettering */
+.cover__balloon {
+  position: absolute;
+  top: 24%;
+  left: 20%;
+}
+.dossier__stamps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+.notfound .balloon {
+  align-self: flex-start;
 }

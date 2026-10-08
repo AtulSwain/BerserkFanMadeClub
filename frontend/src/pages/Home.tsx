@@ -3,6 +3,7 @@ import { InkArt } from '@/art/InkArt';
 import { Page, Reveal, InkRule } from '@/components/Page';
 import { CanonTag } from '@/components/Canon';
 import { useOpenArchive } from '@/context/OpenArchive';
+import { Balloon } from '@/components/Manga';
 import { INDEX } from '@/lib/sections';
 
 export default function Home() {
@@ -26,7 +27,8 @@ export default function Home() {
 
         <div className="cover__page">
           <div className="cover__panel cover__panel--hero panel panel--bleed panel--black">
-            <InkArt variant="swordsman" seed="cover" label="A swordsman seen from behind" />
+            <InkArt variant="swordsman" seed="cover" label="A swordsman seen from behind" sfx="auto" sfxPos="tr" />
+            <Balloon tail="right" className="cover__balloon">…</Balloon>
           </div>
 
           <div className="cover__panel cover__panel--title panel panel--paper">
@@ -43,7 +45,7 @@ export default function Home() {
           </div>
 
           <div className="cover__panel cover__panel--a panel panel--bleed panel--black">
-            <InkArt variant="eclipse" seed="cover-a" showCredit={false} label="An eclipsed sun" />
+            <InkArt variant="eclipse" seed="cover-a" showCredit={false} label="An eclipsed sun" sfx="auto" sfxPos="bl" />
           </div>
           <div className="cover__panel cover__panel--b panel panel--bleed panel--black">
             <InkArt variant="hawk" seed="cover-b" showCredit={false} label="A hawk with spread wings" />
@@ -85,7 +87,7 @@ export default function Home() {
             </p>
           </div>
           <div className="preface__col preface__col--side">
-            <Reveal className="panel panel--thin preface__note">
+            <Reveal className="panel panel--thin preface__note taped">
               <span className="label">On the artwork</span>
               <p className="book" style={{ fontSize: 16 }}>
                 No Berserk panels or official illustrations are reproduced here. Every image is an original abstract ink placeholder,

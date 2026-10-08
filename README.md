@@ -8,7 +8,9 @@ Cover with page-split entry · Archive index (16 chapters) · Character database
 
 ### Artwork
 
-No Berserk panels or official illustrations are included. All images are original procedural ink placeholders, labelled as such, and can be replaced with licensed assets via the `asset` field (see `docs/CMS.md`).
+Every drawing is an original fan illustration built in code with seinen-manga technique: cross-hatching, screentone, rim light, focus and speed lines, hand-lettered katakana sound effects and speech balloons. No Berserk panels or official illustrations are included.
+
+To use real images you own or are licensed to publish, drop them into `frontend/public/panels/` and register them in `frontend/src/data/panels.json` — they replace the matching drawing automatically, in grayscale ink style with credit and license printed on the panel. Instructions and the list of keys are in [`frontend/public/panels/README.md`](frontend/public/panels/README.md).
 
 ## See it
 

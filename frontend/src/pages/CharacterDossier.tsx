@@ -3,6 +3,7 @@ import { Page, Reveal, Xref, XrefList, InkRule } from '@/components/Page';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { InkArt } from '@/art/InkArt';
+import { Stamp } from '@/components/Manga';
 import { archive, hrefFor } from '@/data/archive';
 import type { Character } from '@/data/types';
 import NotFound from './NotFound';
@@ -21,7 +22,7 @@ export default function CharacterDossier() {
     <>
       <Page chapter={`Dossier · No. ${String(idx + 1).padStart(3, '0')}`} folio={32 + idx} className="dossier-page">
         <div className="dossier">
-          <Reveal className="dossier__portrait">
+          <Reveal className="dossier__portrait taped">
             <div className="panel panel--bleed panel--black dossier__frame">
               <span className="panel__caption">Fig. {String(idx + 1).padStart(2, '0')}</span>
               <InkArt variant={c.art} seed={c.id} asset={c.asset} label={c.name} />
@@ -32,7 +33,10 @@ export default function CharacterDossier() {
           </Reveal>
 
           <div className="dossier__sheet">
-            <span className="label">Character sheet · No. {String(idx + 1).padStart(3, '0')}</span>
+            <div className="dossier__stamps">
+              <span className="label">Character sheet · No. {String(idx + 1).padStart(3, '0')}</span>
+              <Stamp>Archived · {c.canon === 'canon' ? 'Manga canon' : 'Mixed sources'}</Stamp>
+            </div>
             <h1 className="dossier__name">
               <Spoiler level={c.spoiler} block>
                 {c.name}

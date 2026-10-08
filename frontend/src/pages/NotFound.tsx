@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Page } from '@/components/Page';
+import { Balloon } from '@/components/Manga';
 
 export default function NotFound() {
   return (
@@ -10,6 +11,7 @@ export default function NotFound() {
           This page<br />
           <em>was torn out.</em>
         </h1>
+        <Balloon kind="shout">No entry here!</Balloon>
         <p className="annot">no entry exists at this address</p>
         <Link to="/archive" className="bracket bracket--red">
           <span>Return to the index</span>

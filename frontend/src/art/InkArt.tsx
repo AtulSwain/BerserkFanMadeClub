@@ -1,15 +1,25 @@
 import { useId, useMemo, type ReactNode } from 'react';
 import type { ArtVariant, Asset } from '@/data/types';
+import { assetFor } from '@/data/assets';
 
 /**
- * Original abstract placeholder artwork.
+ * Original manga-style placeholder artwork.
  *
- * These are procedural ink compositions drawn for this archive. They are NOT
- * Berserk artwork and must never be presented as such. Pass a licensed `asset`
- * to replace a placeholder with real, legally obtained art.
+ * Every drawing here is procedural and made for this archive. The *techniques*
+ * follow seinen manga practice (cross-hatching, screentone, rim light, focus
+ * lines, sound effects), but nothing reproduces a Berserk panel or character
+ * design. Pass a licensed `asset` (see src/data/assets.ts) to show real art.
  */
 
-function rng(seedStr: string) {
+const W = 300;
+const H = 400;
+const INK = '#0a0a0a';
+const PAPER = '#f1eee6';
+const RED = '#7d1111';
+
+type R = () => number;
+
+function rng(seedStr: string): R {
   let h = 2166136261;
   for (let i = 0; i < seedStr.length; i++) h = Math.imul(h ^ seedStr.charCodeAt(i), 16777619);
   return () => {
@@ -21,267 +31,469 @@ function rng(seedStr: string) {
   };
 }
 
-const W = 300;
-const H = 400;
-
-/** Radiating speed lines toward a focal point. */
-function speedLines(r: () => number, cx: number, cy: number, n = 70, inner = 60, color = 'currentColor') {
-  const lines: ReactNode[] = [];
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2 + r() * 0.05;
-    const r0 = inner + r() * 60;
-    const r1 = 420;
-    const w = 0.4 + r() * 2.2;
-    lines.push(
-      <line
-        key={i}
-        x1={cx + Math.cos(a) * r0}
-        y1={cy + Math.sin(a) * r0}
-        x2={cx + Math.cos(a) * r1}
-        y2={cy + Math.sin(a) * r1}
-        stroke={color}
-        strokeWidth={w}
-        opacity={0.25 + r() * 0.5}
-      />,
-    );
-  }
-  return <g>{lines}</g>;
+/** Per-drawing id factory so pattern/mask ids never collide between panels. */
+interface Kit {
+  r: R;
+  id: (name: string) => string;
+  url: (name: string) => string;
+  next: () => string;
 }
 
-/** Horizontal "ground" hatching. */
-function groundHatch(r: () => number, y0: number, color = 'currentColor') {
-  const lines: ReactNode[] = [];
-  for (let y = y0; y < H; y += 3 + r() * 3) {
-    const x0 = r() * 40 - 20;
-    lines.push(<line key={y} x1={x0} y1={y} x2={W - x0 + r() * 30} y2={y + (r() - 0.5) * 6} stroke={color} strokeWidth={0.6 + r()} opacity={0.5} />);
-  }
-  return <g>{lines}</g>;
-}
+/* ─────────────────────────── drawing helpers ─────────────────────────── */
 
-function rain(r: () => number, n = 90) {
+/** Focus lines (集中線): tapered wedges converging on a point. */
+function focusLines(k: Kit, cx: number, cy: number, n = 90, inner = 70, color = INK, alpha = 1) {
   const out: ReactNode[] = [];
   for (let i = 0; i < n; i++) {
-    const x = r() * (W + 120) - 60;
-    const y = r() * H;
-    const l = 20 + r() * 60;
-    out.push(<line key={i} x1={x} y1={y} x2={x - l * 0.45} y2={y + l} stroke="currentColor" strokeWidth={0.5 + r()} opacity={0.35} />);
+    const a = (i / n) * Math.PI * 2 + (k.r() - 0.5) * 0.06;
+    const r0 = inner + k.r() * 70;
+    const w = 0.004 + k.r() * 0.016;
+    const R1 = 520;
+    const p = (ang: number, rad: number) => `${cx + Math.cos(ang) * rad} ${cy + Math.sin(ang) * rad}`;
+    out.push(<path key={i} d={`M${p(a, r0)} L${p(a - w, R1)} L${p(a + w, R1)} Z`} fill={color} opacity={alpha * (0.55 + k.r() * 0.45)} />);
   }
   return <g>{out}</g>;
 }
 
-function crowd(r: () => number, baseY: number, n = 26) {
-  const heads: ReactNode[] = [];
+/** Parallel speed lines (流線) for motion. */
+function speedLines(k: Kit, angle: number, n = 60, color = INK) {
+  const out: ReactNode[] = [];
+  const dx = Math.cos(angle);
+  const dy = Math.sin(angle);
   for (let i = 0; i < n; i++) {
-    const x = (i / n) * (W + 40) - 20 + r() * 10;
-    const y = baseY + r() * 30;
-    const s = 9 + r() * 7;
-    heads.push(
+    const off = (k.r() - 0.5) * 700;
+    const len = 60 + k.r() * 260;
+    const sx = W / 2 - dy * off - dx * 300 + dx * k.r() * 300;
+    const sy = H / 2 + dx * off - dy * 300 + dy * k.r() * 300;
+    out.push(<line key={i} x1={sx} y1={sy} x2={sx + dx * len} y2={sy + dy * len} stroke={color} strokeWidth={0.4 + k.r() * 1.8} strokeLinecap="round" opacity={0.35 + k.r() * 0.5} />);
+  }
+  return <g>{out}</g>;
+}
+
+/** Screentone: a dot pattern faded by a gradient mask, like a cut sheet of tone. */
+function tone(
+  k: Kit,
+  o: { dir?: 'down' | 'up' | 'radial'; cx?: number; cy?: number; rad?: number; light?: boolean; vignette?: boolean; x?: number; y?: number; w?: number; h?: number; strength?: number },
+) {
+  const gid = k.next();
+  const mid = k.next();
+  const { dir = 'down', x = 0, y = 0, w = W, h = H, strength = 1 } = o;
+  const grad =
+    dir === 'radial' ? (
+      <radialGradient id={gid} cx={(o.cx ?? 150) / W} cy={(o.cy ?? 150) / H} r={(o.rad ?? 200) / W} gradientUnits="objectBoundingBox">
+        <stop offset="0" stopColor={o.vignette ? '#000' : '#fff'} stopOpacity={o.vignette ? 1 : strength} />
+        <stop offset="1" stopColor={o.vignette ? '#fff' : '#000'} stopOpacity={o.vignette ? strength : 1} />
+      </radialGradient>
+    ) : (
+      <linearGradient id={gid} x1="0" y1={dir === 'down' ? 0 : 1} x2="0" y2={dir === 'down' ? 1 : 0}>
+        <stop offset="0" stopColor="#fff" stopOpacity={strength} />
+        <stop offset="1" stopColor="#000" />
+      </linearGradient>
+    );
+  return (
+    <g>
+      <defs>
+        {grad}
+        <mask id={mid}>
+          <rect x={x} y={y} width={w} height={h} fill={`url(#${gid})`} />
+        </mask>
+      </defs>
+      <rect x={x} y={y} width={w} height={h} fill={k.url(o.light ? 'dotW' : 'dot')} mask={`url(#${mid})`} />
+    </g>
+  );
+}
+
+/** Cross-hatching inside a shape: 1 = single, 2 = cross, 3 = triple. */
+function hatch(k: Kit, d: string, layers = 1, light = false, opacity = 1) {
+  const set = light ? ['hW1', 'hW2', 'hW3'] : ['h1', 'h2', 'h3'];
+  return (
+    <g opacity={opacity}>
+      {set.slice(0, layers).map((p) => (
+        <path key={p} d={d} fill={k.url(p)} />
+      ))}
+    </g>
+  );
+}
+
+/** Silhouette with a rim of light on one side — the shape is drawn twice, offset. */
+function rimmed(d: string, dx = -2.4, dy = 0, fill = INK, rim = PAPER, rimW = 2.6) {
+  return (
+    <g>
+      <path d={d} fill="none" stroke={rim} strokeWidth={rimW} strokeLinejoin="round" />
+      <path d={d} fill={fill} transform={`translate(${dx} ${dy})`} />
+    </g>
+  );
+}
+
+/** Loose hand-drawn strokes inside a shape: folds, fur, cracks. */
+function strokes(k: Kit, n: number, box: [number, number, number, number], color = PAPER, len = 30, angle = 1.3, width = 0.8, alpha = 0.55) {
+  const [x, y, w, h] = box;
+  const out: ReactNode[] = [];
+  for (let i = 0; i < n; i++) {
+    const sx = x + k.r() * w;
+    const sy = y + k.r() * h;
+    const a = angle + (k.r() - 0.5) * 0.5;
+    const l = len * (0.5 + k.r());
+    const bend = (k.r() - 0.5) * 12;
+    out.push(
+      <path
+        key={i}
+        d={`M${sx} ${sy} q${Math.cos(a) * l * 0.5 + bend} ${Math.sin(a) * l * 0.5} ${Math.cos(a) * l} ${Math.sin(a) * l}`}
+        stroke={color}
+        strokeWidth={width * (0.5 + k.r())}
+        fill="none"
+        strokeLinecap="round"
+        opacity={alpha}
+      />,
+    );
+  }
+  return <g>{out}</g>;
+}
+
+/** Ink spatter and dry-brush flecks. */
+function splatter(k: Kit, n = 30, color = INK, box: [number, number, number, number] = [0, 0, W, H]) {
+  const [x, y, w, h] = box;
+  return (
+    <g>
+      {Array.from({ length: n }, (_, i) => {
+        const s = k.r() < 0.85 ? 0.6 + k.r() * 1.6 : 2.5 + k.r() * 4;
+        return <circle key={i} cx={x + k.r() * w} cy={y + k.r() * h} r={s} fill={color} opacity={0.6 + k.r() * 0.4} />;
+      })}
+    </g>
+  );
+}
+
+/** Horizontal ground strokes. */
+function ground(k: Kit, y0: number, color = INK) {
+  const out: ReactNode[] = [];
+  for (let y = y0; y < H + 10; y += 2.5 + k.r() * 4) {
+    const x0 = k.r() * 60 - 30;
+    const x1 = W - k.r() * 60 + 30;
+    out.push(<path key={y} d={`M${x0} ${y} Q${(x0 + x1) / 2} ${y + (k.r() - 0.5) * 6} ${x1} ${y + (k.r() - 0.5) * 4}`} stroke={color} strokeWidth={0.5 + k.r() * 1.2} fill="none" opacity={0.6} />);
+  }
+  return <g>{out}</g>;
+}
+
+function crowd(k: Kit, baseY: number, n = 20, scale = 1, spears = true) {
+  const out: ReactNode[] = [];
+  for (let i = 0; i < n; i++) {
+    const x = (i / n) * (W + 60) - 30 + k.r() * 12;
+    const y = baseY + k.r() * 26 * scale;
+    const s = (8 + k.r() * 6) * scale;
+    out.push(
       <g key={i}>
-        <circle cx={x} cy={y} r={s} fill="#080808" />
-        <path d={`M${x - s * 1.8} ${H} Q${x - s * 1.6} ${y + s} ${x} ${y + s * 0.8} Q${x + s * 1.6} ${y + s} ${x + s * 1.8} ${H} Z`} fill="#080808" />
-        {r() > 0.6 && <line x1={x + s} y1={y - 80 - r() * 40} x2={x + s * 0.6} y2={H} stroke="#080808" strokeWidth={2} />}
+        {spears && k.r() > 0.45 && <path d={`M${x + s * 0.9} ${y - (90 + k.r() * 60) * scale} l${(k.r() - 0.5) * 10} ${H}`} stroke={INK} strokeWidth={1.6 * scale} />}
+        {spears && k.r() > 0.7 && <path d={`M${x + s * 0.9} ${y - 150 * scale} l-4 10 l8 0 Z`} fill={INK} />}
+        <ellipse cx={x} cy={y} rx={s * 0.85} ry={s} fill={INK} />
+        <path d={`M${x - s * 2} ${H + 20} Q${x - s * 1.8} ${y + s * 0.9} ${x} ${y + s * 0.7} Q${x + s * 1.8} ${y + s * 0.9} ${x + s * 2} ${H + 20} Z`} fill={INK} />
       </g>,
     );
   }
-  return <g>{heads}</g>;
+  return <g>{out}</g>;
 }
 
-const silhouettes: Record<ArtVariant, (r: () => number, ids: Record<string, string>) => ReactNode> = {
-  swordsman: (r, ids) => (
+/* ─────────────────────────── compositions ─────────────────────────── */
+
+const SWORDSMAN_CAPE =
+  'M132 165 C112 168 96 176 92 190 C84 230 66 300 46 372 L62 360 L70 381 L88 364 L102 388 L122 366 L140 390 L158 368 L176 392 L194 366 L212 386 L230 364 L254 374 C234 300 214 232 208 190 C204 176 188 168 168 165 Z';
+
+const compositions: Record<ArtVariant, (k: Kit) => ReactNode> = {
+  swordsman: (k) => (
     <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.18} />
-      {speedLines(r, 105, 105, 60, 54, '#f1eee6')}
-      <circle cx={105} cy={105} r={46} fill="#f1eee6" />
-      {/* sword resting on the shoulder — original abstract silhouette */}
-      <path d="M209 181 L59 31 L41 49 L191 199 Z" fill="#080808" stroke="#f1eee6" strokeWidth="1.4" />
-      <path d="M220 180 L190 210" stroke="#f1eee6" strokeWidth="9" />
-      <path d="M220 180 L190 210" stroke="#080808" strokeWidth="6" />
-      <path d="M205 195 L234 224" stroke="#080808" strokeWidth="9" strokeLinecap="square" />
-      {/* figure seen from behind */}
-      <circle cx={150} cy={148} r={17} fill="#080808" />
-      <path d="M132 165 C112 168 96 176 92 190 C84 230 66 300 46 372 L62 360 L74 378 L92 362 L108 382 L126 364 L144 384 L160 366 L178 386 L196 364 L214 380 L230 362 L254 372 C234 300 214 232 208 190 C204 176 188 168 168 165 Z" fill="#080808" />
-      <path d="M188 172 L216 196 L206 208 L180 188 Z" fill="#080808" />
-      {groundHatch(r, 372, '#f1eee6')}
+      <rect width={W} height={H} fill={INK} />
+      {tone(k, { dir: 'radial', cx: 105, cy: 105, rad: 260, light: true, strength: 0.9 })}
+      {focusLines(k, 105, 105, 70, 56, PAPER, 0.5)}
+      <circle cx={105} cy={105} r={46} fill={PAPER} />
+      <path d="M78 76 A46 46 0 0 0 96 150 A40 40 0 0 1 78 76 Z" fill={k.url('h2')} />
+      {/* blade on the shoulder */}
+      <path d="M209 181 L59 31 L41 49 L191 199 Z" fill={INK} stroke={PAPER} strokeWidth="1.2" />
+      <path d="M200 182 L56 38" stroke={PAPER} strokeWidth="0.6" opacity="0.7" />
+      <path d="M205 195 L234 224" stroke={INK} strokeWidth="9" strokeLinecap="square" />
+      <path d="M222 178 L188 212" stroke={INK} strokeWidth="7" />
+      <path d="M222 178 L188 212" stroke={PAPER} strokeWidth="0.8" />
+      {/* figure from behind, rim-lit by the moon */}
+      {rimmed('M150 131 C140 131 133 139 133 149 C133 159 140 166 150 166 C160 166 167 159 167 149 C167 139 160 131 150 131 Z', 2.4, 1.6)}
+      {rimmed(SWORDSMAN_CAPE, 2.4, 1.4)}
+      {rimmed('M188 172 L216 196 L206 208 L180 188 Z', 1.6, 1.6)}
+      {strokes(k, 18, [80, 200, 150, 160], PAPER, 60, 1.62, 0.7, 0.22)}
+      {ground(k, 378, PAPER)}
+      {splatter(k, 22, PAPER, [0, 300, W, 100])}
     </>
   ),
-  figure: (r, ids) => (
+  figure: (k) => (
     <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.3} />
-      {speedLines(r, 150, 130, 55, 90)}
-      <ellipse cx={150} cy={118} rx={26} ry={30} fill="#080808" />
-      <path d="M150 140 C100 150 90 220 80 400 L220 400 C210 220 200 150 150 140 Z" fill="#080808" />
-      <path d="M118 170 L60 400 M182 170 L240 400" stroke="#080808" strokeWidth="8" />
+      <rect width={W} height={H} fill={PAPER} />
+      {focusLines(k, 150, 150, 100, 110)}
+      {tone(k, { dir: 'up', y: 220, h: 180 })}
+      {rimmed('M150 92 C132 92 122 108 124 126 C126 144 136 154 150 154 C164 154 174 144 176 126 C178 108 168 92 150 92 Z', 0, 0, INK, PAPER, 0)}
+      <path d="M150 150 C112 156 96 190 88 240 L72 400 L228 400 L212 240 C204 190 188 156 150 150 Z" fill={INK} />
+      {hatch(k, 'M88 240 L72 400 L228 400 L212 240 Z', 1, true, 0.35)}
+      <path d="M150 160 L150 400" stroke={PAPER} strokeWidth="0.8" opacity="0.4" />
+      {strokes(k, 14, [90, 180, 120, 200], PAPER, 50, 1.55, 0.6, 0.3)}
     </>
   ),
-  woman: (r, ids) => (
+  woman: (k) => (
     <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.25} />
-      {speedLines(r, 150, 140, 50, 100)}
-      <path d="M150 90 C122 90 112 116 116 142 C108 170 104 190 112 220 L188 220 C196 190 192 170 184 142 C188 116 178 90 150 90 Z" fill="#080808" />
-      <path d="M150 200 C112 210 98 260 92 400 L208 400 C202 260 188 210 150 200 Z" fill="#080808" />
-      <path d="M120 120 C134 112 150 118 160 108" stroke="#f1eee6" strokeWidth="1.2" fill="none" opacity="0.5" />
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'radial', vignette: true, cx: 150, cy: 150, rad: 230, strength: 0.8 })}
+      {focusLines(k, 150, 150, 80, 120, INK, 0.7)}
+      {/* short hair, cloak over armor — original design */}
+      <path d="M150 86 C122 86 108 108 112 136 C114 156 124 170 132 176 L168 176 C176 170 186 156 188 136 C192 108 178 86 150 86 Z" fill={INK} />
+      <path d="M118 120 C132 104 156 100 182 116" stroke={PAPER} strokeWidth="1.2" fill="none" opacity="0.6" />
+      <path d="M150 176 C108 184 92 230 84 300 L74 400 L226 400 L216 300 C208 230 192 184 150 176 Z" fill={INK} />
+      {hatch(k, 'M84 300 L74 400 L226 400 L216 300 Z', 2, true, 0.25)}
+      <path d="M150 190 L150 260 M120 230 L180 230" stroke={PAPER} strokeWidth="0.8" opacity="0.35" />
+      <path d="M205 200 L250 400" stroke={INK} strokeWidth="5" />
+      {splatter(k, 14)}
     </>
   ),
-  hawk: (r) => (
+  hawk: (k) => (
     <>
-      <rect width={W} height={H} fill="#f1eee6" />
-      {speedLines(r, 150, 180, 80, 40, '#080808')}
-      <path d="M150 170 C120 140 70 120 10 128 C60 140 80 158 96 176 C60 172 30 184 6 204 C60 196 100 196 128 206 L142 250 L150 236 L158 250 L172 206 C200 196 240 196 294 204 C270 184 240 172 204 176 C220 158 240 140 290 128 C230 120 180 140 150 170 Z" fill="#080808" />
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 240, strength: 0.7 })}
+      {focusLines(k, 150, 190, 110, 50)}
+      <path d="M150 175 C120 140 70 120 8 128 C58 140 80 158 96 176 C60 172 28 184 4 206 C60 196 100 196 128 208 L140 256 L150 240 L160 256 L172 208 C200 196 240 196 296 206 C272 184 240 172 204 176 C220 158 242 140 292 128 C230 120 180 140 150 175 Z" fill={INK} />
+      {strokes(k, 26, [20, 140, 260, 70], PAPER, 22, 0.25, 0.6, 0.5)}
+      {Array.from({ length: 12 }, (_, i) => {
+        const x = 30 + k.r() * 240;
+        const y = 270 + k.r() * 120;
+        return <path key={i} d={`M${x} ${y} q5 -12 1 -24 q-7 10 -1 24 z`} fill={INK} transform={`rotate(${k.r() * 120 - 60} ${x} ${y})`} />;
+      })}
+    </>
+  ),
+  eclipse: (k) => (
+    <>
+      <rect width={W} height={H} fill={INK} />
+      {focusLines(k, 150, 130, 140, 66, PAPER, 0.75)}
+      <circle cx={150} cy={130} r={68} fill={PAPER} />
+      <circle cx={150} cy={130} r={63} fill={INK} />
+      <path d="M92 150 A62 62 0 0 0 208 150 A68 68 0 0 1 92 150 Z" fill={RED} />
+      {/* a horizon of reaching hands */}
+      {Array.from({ length: 16 }, (_, i) => {
+        const x = (i / 16) * W + k.r() * 10;
+        const h = 50 + k.r() * 80;
+        const b = H + 4;
+        return (
+          <path
+            key={i}
+            d={`M${x - 8} ${b} L${x - 7} ${b - h} L${x - 10} ${b - h - 18} L${x - 6} ${b - h - 6} L${x - 3} ${b - h - 24} L${x} ${b - h - 8} L${x + 3} ${b - h - 22} L${x + 5} ${b - h - 6} L${x + 9} ${b - h - 14} L${x + 7} ${b - h} L${x + 8} ${b}`}
+            fill={INK}
+            stroke={PAPER}
+            strokeWidth="0.8"
+          />
+        );
+      })}
+      {tone(k, { dir: 'up', y: 260, h: 140, light: true, strength: 0.6 })}
+    </>
+  ),
+  tower: (k) => (
+    <>
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 260 })}
+      {speedLines(k, Math.PI / 2 + 0.25, 40)}
+      <path d="M112 400 L124 92 L150 44 L176 92 L188 400 Z" fill={INK} />
+      {hatch(k, 'M150 44 L176 92 L188 400 L150 400 Z', 1, true, 0.4)}
       {Array.from({ length: 9 }, (_, i) => (
-        <path key={i} d={`M${40 + r() * 220} ${260 + r() * 120} q6 -10 2 -22 q-6 10 -2 22 z`} fill="#080808" opacity={0.7} transform={`rotate(${r() * 90 - 45})`} />
+        <path key={i} d={`M120 ${108 + i * 32} L180 ${122 + i * 32}`} stroke={PAPER} strokeWidth="1.2" opacity="0.55" />
       ))}
+      <rect x={143} y={140} width={10} height={20} fill={RED} />
+      {crowd(k, 330, 24, 1)}
     </>
   ),
-  eclipse: (r) => (
+  sea: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {speedLines(r, 150, 130, 110, 66, '#f1eee6')}
-      <circle cx={150} cy={130} r={64} fill="#f1eee6" />
-      <circle cx={150} cy={130} r={60} fill="#080808" />
-      <path d="M96 150 A60 60 0 0 0 204 150 A64 64 0 0 1 96 150 Z" fill="#7d1111" />
-      {Array.from({ length: 14 }, (_, i) => {
-        const x = (i / 14) * W + r() * 14;
-        const h = 60 + r() * 70;
-        return <path key={i} d={`M${x} ${H} L${x - 6} ${H - h} L${x - 2} ${H - h - 14} L${x + 3} ${H - h - 4} L${x + 8} ${H - h - 12} L${x + 10} ${H - h} L${x + 14} ${H}`} fill="#1a1a1a" stroke="#f1eee6" strokeWidth="0.5" opacity="0.9" />;
-      })}
-    </>
-  ),
-  tower: (r, ids) => (
-    <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.4} />
-      <path d="M118 400 L128 90 L150 50 L172 90 L182 400 Z" fill="#080808" />
-      {Array.from({ length: 8 }, (_, i) => <path key={i} d={`M126 ${110 + i * 36} L176 ${126 + i * 36}`} stroke="#f1eee6" strokeWidth="1" opacity="0.5" />)}
-      <rect x={144} y={140} width={10} height={18} fill="#7d1111" />
-      {crowd(r, 330, 22)}
-    </>
-  ),
-  sea: (r) => (
-    <>
-      <rect width={W} height={H} fill="#f1eee6" />
-      {Array.from({ length: 40 }, (_, i) => {
-        const y = 150 + i * 7;
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 160, strength: 0.8 })}
+      {Array.from({ length: 34 }, (_, i) => {
+        const y = 160 + i * 7.5;
         let d = `M-10 ${y}`;
-        for (let x = 0; x <= W + 20; x += 20) d += ` Q${x + 5} ${y - 4 - r() * 6} ${x + 10} ${y} T${x + 20} ${y}`;
-        return <path key={i} d={d} stroke="#080808" strokeWidth={0.6 + i * 0.05} fill="none" />;
+        for (let x = 0; x <= W + 30; x += 22) d += ` q6 ${-4 - k.r() * 7} 11 0 t11 0`;
+        return <path key={i} d={d} stroke={INK} strokeWidth={0.6 + i * 0.07} fill="none" />;
       })}
-      <path d="M80 160 C100 60 210 40 240 130 C250 150 240 170 220 170 Z" fill="#080808" />
-      <circle cx={196} cy={110} r={6} fill="#7d1111" />
+      {/* a vast back breaking the surface */}
+      <path d="M60 172 C84 70 214 40 252 130 C262 152 254 170 232 172 Z" fill={INK} />
+      {strokes(k, 30, [80, 80, 160, 80], PAPER, 18, 0.2, 0.7, 0.35)}
+      <circle cx={204} cy={112} r={6} fill={RED} />
+      <path d="M40 176 C80 160 230 160 270 176" stroke={PAPER} strokeWidth="3" fill="none" />
     </>
   ),
-  tree: (r) => (
+  tree: (k) => (
     <>
-      <rect width={W} height={H} fill="#d8d2c5" />
-      {speedLines(r, 150, 60, 60, 20, '#080808')}
-      <path d="M134 400 C138 300 130 230 110 180 C80 170 40 130 20 90 C60 120 90 140 120 150 C110 110 120 70 150 30 C170 70 180 110 176 150 C210 140 240 120 280 90 C260 130 220 170 190 180 C170 230 162 300 166 400 Z" fill="#080808" />
-      {groundHatch(r, 370, '#080808')}
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'radial', vignette: true, cx: 150, cy: 70, rad: 280, strength: 0.75 })}
+      {focusLines(k, 150, 60, 70, 30, INK, 0.5)}
+      <path d="M132 400 C138 300 130 232 110 182 C80 172 40 132 18 92 C58 122 90 140 120 150 C108 110 120 70 150 28 C172 70 182 110 176 150 C210 140 240 120 282 92 C260 132 220 172 190 182 C170 232 162 300 168 400 Z" fill={INK} />
+      {strokes(k, 30, [120, 190, 60, 210], PAPER, 40, 1.55, 0.6, 0.35)}
+      {Array.from({ length: 40 }, (_, i) => (
+        <circle key={i} cx={20 + k.r() * 260} cy={40 + k.r() * 160} r={1 + k.r() * 2} fill={PAPER} stroke={INK} strokeWidth="0.6" />
+      ))}
+      {ground(k, 372)}
     </>
   ),
-  hand: (r) => (
+  hand: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {speedLines(r, 150, 100, 70, 30, '#7d1111')}
-      <path d="M90 400 L96 250 C80 220 70 170 82 150 C90 140 100 150 104 172 L110 210 L112 120 C112 100 132 100 132 120 L134 200 L138 100 C138 80 160 80 160 100 L160 200 L168 116 C170 96 190 98 190 118 L186 214 L198 160 C202 140 222 146 218 166 L204 270 L210 400 Z" fill="#f1eee6" />
-      <path d="M96 250 L204 270" stroke="#080808" strokeWidth="1" opacity="0.4" />
+      <rect width={W} height={H} fill={INK} />
+      {focusLines(k, 150, 90, 90, 30, RED, 0.6)}
+      <path d="M90 400 L96 250 C80 220 70 170 82 150 C90 140 100 150 104 172 L110 210 L112 120 C112 100 132 100 132 120 L134 200 L138 100 C138 80 160 80 160 100 L160 200 L168 116 C170 96 190 98 190 118 L186 214 L198 160 C202 140 222 146 218 166 L204 270 L210 400 Z" fill={PAPER} />
+      {hatch(k, 'M96 250 L204 270 L210 400 L90 400 Z', 2, false, 0.55)}
+      {hatch(k, 'M160 100 L160 200 L168 116 Z M186 214 L198 160 L218 166 L204 270 Z', 1, false, 0.6)}
+      <path d="M116 208 Q124 214 132 208 M140 202 Q150 208 158 202 M164 206 Q176 212 186 208" stroke={INK} strokeWidth="1" fill="none" />
     </>
   ),
-  beast: (r, ids) => (
+  beast: (k) => (
     <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.35} />
-      {speedLines(r, 150, 170, 90, 90)}
-      <path d="M150 120 L120 60 L134 120 C110 120 96 140 96 170 L20 120 L60 200 L10 240 L90 230 L100 300 L80 400 L220 400 L200 300 L210 230 L290 240 L240 200 L280 120 L204 170 C204 140 190 120 166 120 L180 60 Z" fill="#080808" />
-      <circle cx={134} cy={160} r={4} fill="#7d1111" />
-      <circle cx={166} cy={160} r={4} fill="#7d1111" />
+      <rect width={W} height={H} fill={PAPER} />
+      {focusLines(k, 150, 170, 120, 100)}
+      {tone(k, { dir: 'up', y: 250, h: 150, strength: 0.8 })}
+      {rimmed('M150 118 L118 52 L134 118 C110 118 96 140 96 170 L18 118 L58 200 L8 242 L88 230 L98 300 L76 400 L224 400 L202 300 L212 230 L292 242 L242 200 L282 118 L204 170 C204 140 190 118 166 118 L182 52 Z', -2.4, 0, INK, PAPER, 2.4)}
+      {hatch(k, 'M96 170 L204 170 L212 230 L202 300 L98 300 L88 230 Z', 1, true, 0.3)}
+      {strokes(k, 40, [90, 160, 120, 140], PAPER, 16, 1.4, 0.6, 0.5)}
+      <path d="M128 156 L142 162 L130 168 Z M172 156 L158 162 L170 168 Z" fill={RED} />
+      <path d="M128 196 L136 210 L144 198 L152 212 L160 198 L168 210 L174 196" stroke={PAPER} strokeWidth="1.6" fill="none" />
+      {splatter(k, 18)}
     </>
   ),
-  crowd: (r, ids) => (
+  crowd: (k) => (
     <>
-      <rect width={W} height={H} fill="#beb6a6" />
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.5} />
-      {crowd(r, 210, 18)}
-      {crowd(r, 280, 24)}
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 300, strength: 0.6 })}
+      {speedLines(k, Math.PI / 2 + 0.15, 30)}
+      {crowd(k, 200, 16, 0.8)}
+      {crowd(k, 270, 20, 1.15)}
     </>
   ),
-  landscape: (r) => (
+  landscape: (k) => (
     <>
-      <rect width={W} height={H} fill="#d8d2c5" />
-      <path d={`M0 230 Q60 180 110 220 T210 200 T300 190 L300 400 L0 400 Z`} fill="#080808" opacity={0.85} />
-      <path d={`M0 280 Q80 240 150 280 T300 260 L300 400 L0 400 Z`} fill="#080808" />
-      {groundHatch(r, 150, '#080808')}
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 200, strength: 0.5 })}
+      <path d="M210 160 l0 -18 l4 0 l0 -6 l4 0 l0 6 l6 0 l0 -10 l4 -6 l4 6 l0 10 l4 0 l0 18 Z" fill={INK} opacity="0.7" />
+      <path d="M0 228 Q60 180 110 218 T210 196 T300 188 L300 400 L0 400 Z" fill={INK} opacity="0.8" />
+      {hatch(k, 'M0 228 Q60 180 110 218 T210 196 T300 188 L300 260 L0 260 Z', 1, true, 0.4)}
+      <path d="M0 282 Q80 238 150 280 T300 258 L300 400 L0 400 Z" fill={INK} />
+      {ground(k, 330, PAPER)}
+      <path d="M40 120 q10 -6 20 0 q10 -6 20 0" stroke={INK} strokeWidth="1.2" fill="none" />
     </>
   ),
-  sword: (r) => (
+  sword: (k) => (
     <>
-      <rect width={W} height={H} fill="#f1eee6" />
-      {speedLines(r, 260, 60, 90, 40, '#080808')}
-      <path d="M-10 380 L250 60 L290 80 L30 400 Z" fill="#080808" />
-      <path d="M8 360 L270 66" stroke="#f1eee6" strokeWidth="1" />
+      <rect width={W} height={H} fill={PAPER} />
+      {speedLines(k, -0.9, 70)}
+      <path d="M-14 380 L248 58 L292 80 L32 404 Z" fill={INK} />
+      <path d="M2 372 L262 66" stroke={PAPER} strokeWidth="1.4" />
+      {hatch(k, 'M20 396 L280 74 L292 80 L32 404 Z', 1, true, 0.6)}
+      {splatter(k, 26, INK, [150, 40, 150, 140])}
+      {splatter(k, 8, RED, [170, 60, 120, 100])}
     </>
   ),
-  armor: (r) => (
+  armor: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {speedLines(r, 150, 200, 70, 120, '#4a0909')}
-      <path d="M150 80 C90 80 70 140 76 200 L60 180 L70 240 L100 260 L110 320 L190 320 L200 260 L230 240 L240 180 L224 200 C230 140 210 80 150 80 Z" fill="#1a1a1a" stroke="#f1eee6" strokeWidth="1.2" />
-      <path d="M110 190 L140 200 L130 214 Z M190 190 L160 200 L170 214 Z" fill="#7d1111" />
-      <path d="M112 250 L124 280 L136 256 L150 290 L164 256 L176 280 L188 250" stroke="#f1eee6" strokeWidth="2" fill="none" />
+      <rect width={W} height={H} fill={INK} />
+      {focusLines(k, 150, 200, 80, 130, RED, 0.5)}
+      {rimmed('M150 76 C88 76 68 138 74 200 L58 180 L68 244 L100 264 L110 326 L190 326 L200 264 L232 244 L242 180 L226 200 C232 138 212 76 150 76 Z', 0, 0, '#1b1b1b', PAPER, 1.4)}
+      {hatch(k, 'M150 76 C212 76 232 138 226 200 L200 264 L190 326 L150 326 Z', 2, true, 0.22)}
+      <path d="M106 188 L140 200 L128 216 Z M194 188 L160 200 L172 216 Z" fill={RED} />
+      <path d="M110 252 L122 284 L136 258 L150 296 L164 258 L178 284 L190 252" stroke={PAPER} strokeWidth="2.2" fill="none" />
+      <path d="M150 84 L150 180" stroke={PAPER} strokeWidth="1" opacity="0.5" />
+      {strokes(k, 16, [80, 90, 140, 90], PAPER, 20, 0.6, 0.6, 0.3)}
     </>
   ),
-  skull: (r) => (
+  skull: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {speedLines(r, 150, 160, 60, 110, '#f1eee6')}
-      <path d="M150 70 C96 70 84 120 88 170 C92 200 104 214 110 240 L190 240 C196 214 208 200 212 170 C216 120 204 70 150 70 Z" fill="#f1eee6" />
-      <path d="M108 150 C120 140 138 146 138 166 C126 176 112 170 108 150 Z M192 150 C180 140 162 146 162 166 C174 176 188 170 192 150 Z" fill="#080808" />
-      <path d="M144 190 L150 176 L156 190 Z" fill="#080808" />
-      <path d="M116 226 L184 226" stroke="#080808" strokeWidth="2" strokeDasharray="5 3" />
-      <path d="M70 400 L110 240 L190 240 L230 400 Z" fill="#1a1a1a" />
+      <rect width={W} height={H} fill={INK} />
+      {tone(k, { dir: 'radial', cx: 150, cy: 160, rad: 240, light: true, strength: 0.8 })}
+      {focusLines(k, 150, 160, 70, 110, PAPER, 0.6)}
+      <path d="M150 68 C94 68 82 120 86 170 C90 202 104 216 110 242 L190 242 C196 216 210 202 214 170 C218 120 206 68 150 68 Z" fill={PAPER} />
+      {hatch(k, 'M150 68 C206 68 218 120 214 170 C210 202 196 216 190 242 L150 242 Z', 2, false, 0.5)}
+      <path d="M106 150 C120 138 140 146 140 168 C126 180 110 172 106 150 Z M194 150 C180 138 160 146 160 168 C174 180 190 172 194 150 Z" fill={INK} />
+      <path d="M144 192 L150 176 L156 192 Z" fill={INK} />
+      <path d="M114 226 L186 226" stroke={INK} strokeWidth="2.5" strokeDasharray="6 3" />
+      <path d="M64 400 L108 242 L192 242 L236 400 Z" fill="#1b1b1b" stroke={PAPER} strokeWidth="1" />
+      {strokes(k, 20, [80, 260, 140, 130], PAPER, 30, 1.6, 0.6, 0.3)}
     </>
   ),
-  witch: (r, ids) => (
+  witch: (k) => (
     <>
-      <rect width={W} height={H} fill={`url(#${ids.hatch})`} opacity={0.3} />
-      {speedLines(r, 150, 150, 50, 110)}
-      <path d="M150 40 L196 170 L104 170 Z" fill="#080808" />
-      <ellipse cx={150} cy={172} rx={80} ry={12} fill="#080808" />
-      <path d="M150 180 C116 190 110 260 100 400 L200 400 C190 260 184 190 150 180 Z" fill="#080808" />
-      <line x1={220} y1={120} x2={196} y2={400} stroke="#080808" strokeWidth="5" />
-      <circle cx={221} cy={116} r={8} fill="none" stroke="#7d1111" strokeWidth="2" />
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'radial', vignette: true, cx: 150, cy: 170, rad: 260, strength: 0.7 })}
+      {focusLines(k, 150, 160, 80, 120)}
+      <path d="M150 36 L200 172 L100 172 Z" fill={INK} />
+      <ellipse cx={150} cy={174} rx={84} ry={13} fill={INK} />
+      <path d="M150 182 C116 192 108 262 98 400 L202 400 C192 262 184 192 150 182 Z" fill={INK} />
+      {hatch(k, 'M98 300 L202 300 L202 400 L98 400 Z', 1, true, 0.3)}
+      <line x1={224} y1={118} x2={198} y2={400} stroke={INK} strokeWidth="5" />
+      <circle cx={225} cy={112} r={10} fill="none" stroke={RED} strokeWidth="2.4" />
+      {Array.from({ length: 10 }, (_, i) => <circle key={i} cx={200 + k.r() * 60} cy={70 + k.r() * 80} r={1.2} fill={RED} />)}
     </>
   ),
-  elf: (r) => (
+  elf: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {Array.from({ length: 50 }, (_, i) => <circle key={i} cx={r() * W} cy={r() * H} r={r() * 1.6} fill="#f1eee6" opacity={r()} />)}
-      <circle cx={150} cy={190} r={70} fill="#f1eee6" opacity={0.06} />
-      <path d="M150 170 C110 120 80 130 70 160 C100 170 120 180 146 190 Z M150 170 C190 120 220 130 230 160 C200 170 180 180 154 190 Z" fill="#f1eee6" opacity={0.7} />
-      <ellipse cx={150} cy={190} rx={9} ry={20} fill="#f1eee6" />
-      <circle cx={150} cy={165} r={8} fill="#f1eee6" />
+      <rect width={W} height={H} fill={INK} />
+      {Array.from({ length: 70 }, (_, i) => <circle key={i} cx={k.r() * W} cy={k.r() * H} r={k.r() * 1.6} fill={PAPER} opacity={k.r()} />)}
+      {tone(k, { dir: 'radial', cx: 150, cy: 190, rad: 120, light: true, strength: 1 })}
+      <path d="M150 172 C110 120 76 126 66 160 C98 172 122 182 146 192 Z M150 172 C190 120 224 126 234 160 C202 172 178 182 154 192 Z" fill={PAPER} opacity="0.75" />
+      <path d="M150 172 C120 150 96 150 80 160 M150 172 C180 150 204 150 220 160" stroke={INK} strokeWidth="0.6" fill="none" />
+      <ellipse cx={150} cy={192} rx={9} ry={20} fill={PAPER} />
+      <circle cx={150} cy={166} r={8} fill={PAPER} />
     </>
   ),
-  egg: (r) => (
+  egg: (k) => (
     <>
-      <rect width={W} height={H} fill="#080808" />
-      {speedLines(r, 150, 200, 90, 100, '#4a0909')}
-      <path d="M150 110 C200 110 222 190 216 240 C210 290 184 310 150 310 C116 310 90 290 84 240 C78 190 100 110 150 110 Z" fill="#7d1111" />
-      <path d="M118 200 Q130 192 140 204 M168 214 Q178 204 190 210 M130 250 Q154 270 178 246 M148 170 L152 236" stroke="#080808" strokeWidth="3" fill="none" />
+      <rect width={W} height={H} fill={INK} />
+      {focusLines(k, 150, 210, 110, 110, RED, 0.5)}
+      <path d="M150 110 C200 110 222 190 216 240 C210 290 184 312 150 312 C116 312 90 290 84 240 C78 190 100 110 150 110 Z" fill={RED} />
+      {hatch(k, 'M150 110 C200 110 222 190 216 240 C210 290 184 312 150 312 Z', 2, false, 0.45)}
+      {/* displaced, asymmetric features */}
+      <path d="M112 196 Q124 186 138 200" stroke={INK} strokeWidth="3" fill="none" />
+      <circle cx={126} cy={200} r={3} fill={INK} />
+      <path d="M170 222 Q182 214 196 224" stroke={INK} strokeWidth="3" fill="none" />
+      <circle cx={184} cy={224} r={2.6} fill={INK} />
+      <path d="M150 166 L146 238" stroke={INK} strokeWidth="2.4" />
+      <path d="M118 262 Q140 252 158 270 Q172 280 186 262" stroke={INK} strokeWidth="3" fill="none" />
+      <path d="M118 140 C130 128 144 124 156 126" stroke={PAPER} strokeWidth="2" fill="none" opacity="0.6" />
     </>
   ),
-  castle: (r) => (
+  castle: (k) => (
     <>
-      <rect width={W} height={H} fill="#d8d2c5" />
-      {speedLines(r, 150, 120, 50, 160, '#080808')}
-      <path d="M20 400 L20 220 L40 220 L40 206 L52 206 L52 220 L70 220 L70 160 L84 160 L84 146 L96 146 L96 160 L110 160 L110 100 L126 100 L126 86 L138 86 L138 100 L162 100 L162 86 L174 86 L174 100 L190 100 L190 160 L204 160 L204 146 L216 146 L216 160 L230 160 L230 220 L248 220 L248 206 L260 206 L260 220 L280 220 L280 400 Z" fill="#080808" />
-      <path d="M140 400 L140 330 Q150 316 160 330 L160 400 Z" fill="#d8d2c5" />
+      <rect width={W} height={H} fill={PAPER} />
+      {tone(k, { dir: 'down', h: 300, strength: 0.7 })}
+      {speedLines(k, Math.PI / 2, 26)}
+      <path d="M20 400 L20 220 L40 220 L40 206 L52 206 L52 220 L70 220 L70 160 L84 160 L84 146 L96 146 L96 160 L110 160 L110 100 L126 100 L126 86 L138 86 L138 100 L162 100 L162 86 L174 86 L174 100 L190 100 L190 160 L204 160 L204 146 L216 146 L216 160 L230 160 L230 220 L248 220 L248 206 L260 206 L260 220 L280 220 L280 400 Z" fill={INK} />
+      {hatch(k, 'M190 100 L190 400 L280 400 L280 220 L230 220 L230 160 L190 160 Z', 1, true, 0.35)}
+      {[130, 180, 240].map((y) => <rect key={y} x={146} y={y} width={8} height={16} fill={PAPER} />)}
+      <path d="M140 400 L140 330 Q150 316 160 330 L160 400 Z" fill={PAPER} />
+      {ground(k, 386)}
     </>
   ),
-  storm: (r) => (
+  storm: (k) => (
     <>
       <rect width={W} height={H} fill="#1a1a1a" />
-      {rain(r, 140)}
-      <path d="M180 0 L150 120 L176 124 L120 260 L196 110 L170 106 L210 0 Z" fill="#f1eee6" />
-      {groundHatch(r, 340, '#f1eee6')}
+      {tone(k, { dir: 'down', h: 220, light: true, strength: 0.5 })}
+      {speedLines(k, 1.95, 120, PAPER)}
+      <path d="M180 0 L150 120 L176 124 L120 260 L196 110 L170 106 L210 0 Z" fill={PAPER} />
+      {ground(k, 340, PAPER)}
     </>
   ),
+};
+
+/* ─────────────────────────── component ─────────────────────────── */
+
+/** Default sound effect per scene, hand-lettered in katakana the way manga letters noise. */
+const SFX_BY_VARIANT: Partial<Record<ArtVariant, string>> = {
+  swordsman: 'ゴゴゴ',
+  sword: 'ザンッ',
+  beast: 'グオオ',
+  storm: 'ゴロゴロ',
+  eclipse: 'ドクン',
+  castle: 'ドドド',
+  crowd: 'ザワ…',
+  hawk: 'バサッ',
+  egg: 'ドクン',
+  skull: 'ヒヒーン',
+  tower: 'ゴォォ',
+  hand: 'ズズ…',
+  armor: 'ガキン',
+  sea: 'ザバァ',
+  tree: 'サァァ',
 };
 
 interface InkArtProps {
@@ -291,33 +503,68 @@ interface InkArtProps {
   label?: string;
   showCredit?: boolean;
   className?: string;
+  /** Hand-lettered sound effect, e.g. ゴゴゴ; 'auto' picks one for the scene. Purely decorative. */
+  sfx?: string;
+  sfxPos?: 'tl' | 'tr' | 'bl' | 'br';
 }
 
-export function InkArt({ variant = 'figure', seed, asset, label, showCredit = true, className }: InkArtProps) {
+export function InkArt({ variant = 'figure', seed, asset: assetProp, label, showCredit = true, className, sfx, sfxPos = 'tr' }: InkArtProps) {
   const uid = useId().replace(/:/g, '');
-  const ids = { hatch: `h${uid}`, rough: `r${uid}` };
-  const body = useMemo(() => silhouettes[variant](rng(`${variant}:${seed ?? ''}`), ids), [variant, seed, uid]);
+  const asset = assetProp ?? assetFor(seed);
+  if (sfx === 'auto') sfx = SFX_BY_VARIANT[variant];
+  const body = useMemo(() => {
+    let n = 0;
+    const kit: Kit = {
+      r: rng(`${variant}:${seed ?? ''}`),
+      id: (name) => `${uid}-${name}`,
+      url: (name) => `url(#${uid}-${name})`,
+      next: () => `${uid}-x${n++}`,
+    };
+    return compositions[variant](kit);
+  }, [variant, seed, uid]);
 
   if (asset) {
     return (
-      <figure className={`art ${className ?? ''}`} style={{ margin: 0 }}>
+      <figure className={`art art--asset ${className ?? ''}`} style={{ margin: 0 }}>
         <img src={asset.src} alt={asset.alt} loading="lazy" decoding="async" />
+        {sfx && <span className={`sfx sfx--${sfxPos}`} aria-hidden="true">{sfx}</span>}
         {showCredit && <figcaption className="art__credit">{asset.credit} · {asset.license}</figcaption>}
       </figure>
     );
   }
 
+  const id = (n: string) => `${uid}-${n}`;
+  const hatchPattern = (name: string, angle: number, color: string, gap = 4.2, w = 0.75) => (
+    <pattern id={id(name)} width={gap} height={gap} patternUnits="userSpaceOnUse" patternTransform={`rotate(${angle})`}>
+      <line x1="0" y1="0" x2="0" y2={gap} stroke={color} strokeWidth={w} />
+    </pattern>
+  );
+
   return (
-    <div className={`art ${className ?? ''}`} role="img" aria-label={label ? `${label} — original abstract placeholder, not official artwork` : 'Original abstract placeholder art'}>
+    <div
+      className={`art ${className ?? ''}`}
+      role="img"
+      aria-label={label ? `${label} — original placeholder drawing, not official artwork` : 'Original placeholder drawing'}
+    >
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <defs>
-          <pattern id={ids.hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
-            <line x1="0" y1="0" x2="0" y2="6" stroke="#f1eee6" strokeWidth="0.8" />
+          <pattern id={id('dot')} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <circle cx="2.5" cy="2.5" r="1.05" fill={INK} />
           </pattern>
+          <pattern id={id('dotW')} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <circle cx="2.5" cy="2.5" r="1.05" fill={PAPER} />
+          </pattern>
+          {hatchPattern('h1', 38, INK)}
+          {hatchPattern('h2', -42, INK)}
+          {hatchPattern('h3', 82, INK, 3.4, 0.6)}
+          {hatchPattern('hW1', 32, PAPER)}
+          {hatchPattern('hW2', -48, PAPER)}
+          {hatchPattern('hW3', 86, PAPER, 3.4, 0.6)}
         </defs>
         <g filter="url(#ink-rough-soft)">{body}</g>
       </svg>
-      {showCredit && <span className="art__credit">Placeholder · original abstract</span>}
+      {sfx && <span className={`sfx sfx--${sfxPos}`} aria-hidden="true">{sfx}</span>}
+      {showCredit && <span className="art__credit">Fan drawing · placeholder</span>}
     </div>
   );
 }

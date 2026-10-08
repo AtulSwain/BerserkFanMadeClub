@@ -124,7 +124,7 @@ export default function Chronology() {
             {ai < arcs.length - 1 && (
               <div className="chrono__gutter" aria-hidden="true">
                 <div className="chrono__gutter-panel panel panel--bleed panel--black panel--slant">
-                  <InkArt variant={arcs[ai + 1].art} seed={`g-${a.id}`} showCredit={false} />
+                  <InkArt variant={arcs[ai + 1].art} seed={`g-${a.id}`} showCredit={false} sfx="auto" sfxPos="tl" />
                 </div>
                 <span className="chrono__line" />
               </div>

@@ -1,5 +1,6 @@
 import { Page, PageHead } from '@/components/Page';
 import { CanonLegend } from '@/components/Canon';
+import { Stamp } from '@/components/Manga';
 import { archive } from '@/data/archive';
 
 export default function Sources() {
@@ -21,7 +22,10 @@ export default function Sources() {
           <li key={s.id} id={s.id} className="biblio__item">
             <span className="biblio__n">[{i + 1}]</span>
             <div>
-              <p className="biblio__title">{s.title}</p>
+              <p className="biblio__title">
+                {s.title}{' '}
+                {s.status === 'Needs verification' ? <Stamp>Unverified</Stamp> : <Stamp tone="ink">Checked</Stamp>}
+              </p>
               <dl className="biblio__meta">
                 <dt>Type</dt>
                 <dd>{s.type}</dd>

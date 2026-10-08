@@ -40,3 +40,13 @@
     radial-gradient(ellipse at 88% 78%, rgba(70, 50, 20, 0.16), transparent 38%),
     radial-gradient(ellipse at 60% 40%, rgba(255, 250, 235, 0.15), transparent 60%);
 }
+
+:root {
+  --font-sfx: 'Dela Gothic One', 'Cinzel', Impact, sans-serif;
+  --font-brush: 'Yuji Syuku', 'Cormorant Garamond', serif;
+}
+
+:root {
+  /* mottled mask so stamps look pressed by hand, not printed */
+  --mottle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.1'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+}
