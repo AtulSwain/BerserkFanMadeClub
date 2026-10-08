@@ -26,7 +26,7 @@ export default function Characters() {
           }
           lede={
             <>
-              Character sheets, drawn as a manga&rsquo;s cast page. Hover a strip to bring its figure out of the ink.{' '}
+              Character sheets, drawn as a manga&rsquo;s cast page. Point at a strip to bring its figure out of the ink; open it to read the full dossier.{' '}
               <Link to="/relationships" className="xref">Open the relationship map →</Link>
             </>
           }

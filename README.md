@@ -10,6 +10,28 @@ Cover with page-split entry · Archive index (16 chapters) · Character database
 
 No Berserk panels or official illustrations are included. All images are original procedural ink placeholders, labelled as such, and can be replaced with licensed assets via the `asset` field (see `docs/CMS.md`).
 
+## See it
+
+**Live site:** once this repository's GitHub Pages is enabled (see *Deploy* below), the site is published at
+`https://atulswain.github.io/BerserkFanMadeClub/` on every push to `main`.
+
+| Cover | Archive index |
+|---|---|
+| ![Cover](docs/screenshots/cover.jpg) | ![Archive index](docs/screenshots/archive-index.jpg) |
+| **Character dossier** | **Relationship map** |
+| ![Character dossier](docs/screenshots/character-dossier.jpg) | ![Relationship map](docs/screenshots/relationship-map.jpg) |
+| **God Hand** | **Weapons arsenal** |
+| ![God Hand](docs/screenshots/god-hand.jpg) | ![Weapons](docs/screenshots/weapons.jpg) |
+| **Chronology** | **Event view — The Eclipse** |
+| ![Chronology](docs/screenshots/chronology.jpg) | ![Event view](docs/screenshots/event-eclipse.jpg) |
+| **Atlas** | **Panel analysis lab** |
+| ![Atlas](docs/screenshots/atlas.jpg) | ![Panel lab](docs/screenshots/panel-lab.jpg) |
+
+<p>
+  <img src="docs/screenshots/mobile-cover.jpg" alt="Mobile cover" width="260" />
+  <img src="docs/screenshots/mobile-characters.jpg" alt="Mobile characters" width="260" />
+</p>
+
 ## Technology Stack
 
 - Frontend: React, TypeScript, Vite, React Router DOM, hand-written CSS (no UI or animation libraries — CSS animations, SVG filters and IntersectionObserver keep it fast)
@@ -56,6 +78,22 @@ uvicorn app.main:app --reload
 - `npm run dev` starts the frontend development server.
 - `npm run build` type-checks and builds the frontend.
 - `uvicorn app.main:app --reload` starts the backend API.
+
+## Deploy
+
+The site is a static build and deploys to **GitHub Pages** with `.github/workflows/pages.yml`:
+
+1. In the repository go to **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**.
+2. Merge to `main` (or run the *Deploy site to GitHub Pages* workflow manually from the **Actions** tab).
+3. The site appears at `https://<owner>.github.io/<repository>/`.
+
+Build variants:
+
+- `npm run build` — normal build served from `/`.
+- `BASE_PATH=/BerserkFanMadeClub/ npm run build:pages` — GitHub Pages build (sub-path + `404.html` fallback so deep links work).
+- `npm run build:preview` — hash-routed build with relative paths that runs from any folder or static host.
+
+`.github/workflows/ci.yml` builds the frontend and checks the backend on every pull request.
 
 ## Future Roadmap
 

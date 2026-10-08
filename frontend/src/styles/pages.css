@@ -1300,7 +1300,7 @@ a.register__name:hover {
   scroll-margin-left: var(--margin);
 }
 .chrono__divider {
-  width: 210px;
+  width: 250px;
   flex: none;
   display: flex;
   flex-direction: column;
@@ -1318,7 +1318,8 @@ a.register__name:hover {
 }
 .chrono__name {
   font-family: var(--font-display);
-  font-size: 44px;
+  font-size: 36px;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
   line-height: 0.92;
   margin: 10px 0;
@@ -2867,8 +2868,8 @@ a.register__name:hover {
 .ev-hero + .page {
   min-height: 0;
 }
-/* touch screens cannot hover: keep cast figures visible */
-@media (hover: none) {
+/* touch screens and narrow screens cannot rely on hover: keep figures visible */
+@media (hover: none), (max-width: 820px) {
   .cast__art .art {
     opacity: 0.75;
     transform: none;

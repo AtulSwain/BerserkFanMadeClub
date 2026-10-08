@@ -47,10 +47,10 @@ export default function Chronology() {
         <button type="button" className="bracket" onClick={() => nudge(-1)}><span>← Earlier</span></button>
         <nav className="chrono-jump" aria-label="Jump to arc">
           {arcs.map((a) => (
-            <a key={a.id} href={`#${a.id}`} className="chrono-jump__link">
+            <Link key={a.id} to={{ hash: a.id }} className="chrono-jump__link">
               <span className="chrono-jump__num">{a.numeral}</span>
               <Spoiler level={a.spoiler}>{a.name}</Spoiler>
-            </a>
+            </Link>
           ))}
         </nav>
         <button type="button" className="bracket" onClick={() => nudge(1)}><span>Later →</span></button>

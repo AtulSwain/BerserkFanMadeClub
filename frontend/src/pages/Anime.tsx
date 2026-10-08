@@ -29,11 +29,11 @@ export default function Anime() {
         <ol className="reels">
           {list.map((a) => (
             <li key={a.id}>
-              <a href={`#${a.id}`} className="reel">
+              <Link to={{ hash: a.id }} className="reel">
                 <span className="reel__year">{a.year}</span>
                 <span className="reel__name">{a.name}</span>
                 <span className="reel__studio">{a.studio}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </ol>
