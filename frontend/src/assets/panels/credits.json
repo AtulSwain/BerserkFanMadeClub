@@ -1,0 +1,5 @@
+{
+  "$schema": "./credits.schema.json",
+  "_help": "Optional. Add an entry only to give a picture a caption, artist credit or license. The key is the image file name without its extension. Run `npm run panels` to see every key.",
+  "credits": {}
+}

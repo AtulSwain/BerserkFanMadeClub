@@ -5,6 +5,7 @@ import { FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
+import { slotKey } from '@/data/slots';
 import { archive, nameOf } from '@/data/archive';
 import type { StoryEvent } from '@/data/types';
 import NotFound from './NotFound';
@@ -82,7 +83,7 @@ export default function EventView() {
             <Reveal key={i} className={`ev-p ${PANEL_SHAPES[i % PANEL_SHAPES.length]} panel panel--bleed panel--black`} delay={i * 90}>
               <span className="panel__caption">{p.caption}</span>
               <Spoiler level={p.spoiler} block>
-                <InkArt variant={p.art} seed={`${ev.id}-${i}`} showCredit={i === 0} label={p.text} sfx={i % 2 === 1 || i === ev.sequence.length - 1 ? 'auto' : undefined} sfxPos={PANEL_SHAPES[i % PANEL_SHAPES.length] === 'ev-p--tall' ? 'tr' : 'bl'} />
+                <InkArt variant={p.art} seed={slotKey.eventPanel(ev.id, i)} showCredit={i === 0} label={p.text} sfx={i % 2 === 1 || i === ev.sequence.length - 1 ? 'auto' : undefined} sfxPos={PANEL_SHAPES[i % PANEL_SHAPES.length] === 'ev-p--tall' ? 'tr' : 'bl'} />
                 <span className="ev-p__narration narration">{p.text}</span>
               </Spoiler>
             </Reveal>

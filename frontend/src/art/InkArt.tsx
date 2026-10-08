@@ -1,6 +1,6 @@
 import { useId, useMemo, type ReactNode } from 'react';
 import type { ArtVariant, Asset } from '@/data/types';
-import { assetFor } from '@/data/assets';
+import { assetFor, fileFor } from '@/data/assets';
 
 /**
  * Original manga-style placeholder artwork.
@@ -529,6 +529,7 @@ export function InkArt({ variant = 'figure', seed, asset: assetProp, label, show
         <img src={asset.src} alt={asset.alt} loading="lazy" decoding="async" />
         {sfx && <span className={`sfx sfx--${sfxPos}`} aria-hidden="true">{sfx}</span>}
         {showCredit && <figcaption className="art__credit">{asset.credit} · {asset.license}</figcaption>}
+        {import.meta.env.DEV && seed && <span className="slot-label" aria-hidden="true">{fileFor(seed) ? `✓ ${fileFor(seed)}` : `${seed}.jpg`}</span>}
       </figure>
     );
   }
@@ -565,6 +566,7 @@ export function InkArt({ variant = 'figure', seed, asset: assetProp, label, show
       </svg>
       {sfx && <span className={`sfx sfx--${sfxPos}`} aria-hidden="true">{sfx}</span>}
       {showCredit && <span className="art__credit">Fan drawing · placeholder</span>}
+      {import.meta.env.DEV && seed && <span className="slot-label" aria-hidden="true">{fileFor(seed) ? `✓ ${fileFor(seed)}` : `${seed}.jpg`}</span>}
     </div>
   );
 }

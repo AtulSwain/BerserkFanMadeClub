@@ -29,3 +29,6 @@ export const INDEX: Section[] = [
   { no: '15', title: 'Production', ja: '制作', to: '/production', page: 150, blurb: 'Creators, studios and the bibliography.', art: 'figure' },
   { no: '16', title: 'Glossary', ja: '用語集', to: '/glossary', page: 160, blurb: 'Terms of the archive.', art: 'tower' },
 ];
+
+/** Each index entry gets its own composition so the page reads as designed, not a card grid. Only xl and tall tiles carry art. */
+export const INDEX_LAYOUT = ['xl', 'plain', 'tall', 'plain', 'wide', 'inverse', 'plain', 'tall', 'plain', 'wide', 'xl', 'plain', 'inverse', 'plain', 'wide', 'plain'] as const;

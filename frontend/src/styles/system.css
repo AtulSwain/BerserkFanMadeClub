@@ -1087,3 +1087,45 @@
   content: '※ ';
   font-family: var(--font-ja);
 }
+
+/* dev-only image slot labels (npm run dev → "Show image names") */
+.slot-label {
+  display: none;
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 8;
+  max-width: calc(100% - 12px);
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  background: #ffe14d;
+  color: #000;
+  padding: 3px 6px;
+  border: 1px solid #000;
+  user-select: all;
+}
+html[data-slots='on'] .slot-label {
+  display: block;
+}
+html[data-slots='on'] .art {
+  outline: 2px dashed #ffe14d;
+  outline-offset: -4px;
+}
+.slot-toggle {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 9500;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #ffe14d;
+  color: #000;
+  border: 2px solid #000;
+  padding: 8px 12px;
+  box-shadow: 3px 3px 0 #000;
+}

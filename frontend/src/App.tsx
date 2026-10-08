@@ -4,6 +4,7 @@ import { Nav } from '@/components/Nav';
 import { InkFilters } from '@/components/Page';
 import Home from '@/pages/Home';
 import { OpenArchiveContext } from '@/context/OpenArchive';
+import { SlotToggle } from '@/components/SlotToggle';
 
 // Every section is its own chunk — the cover loads alone.
 const ArchiveIndex = lazy(() => import('@/pages/ArchiveIndex'));
@@ -137,6 +138,7 @@ export default function App() {
           <SearchOverlay open={searchOpen} onClose={closeSearch} />
         </Suspense>
       )}
+      {import.meta.env.DEV && <SlotToggle />}
       {splitKey > 0 && (
         <div className="split" key={splitKey} aria-hidden="true">
           <div className="split__leaf split__leaf--l" />

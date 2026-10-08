@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 import { Page, PageHead, Reveal } from '@/components/Page';
 import { Ja } from '@/components/Manga';
 import { InkArt } from '@/art/InkArt';
+import { slotKey } from '@/data/slots';
 import { CanonLegend } from '@/components/Canon';
-import { INDEX } from '@/lib/sections';
+import { INDEX, INDEX_LAYOUT as LAYOUT } from '@/lib/sections';
 
-/** Each entry gets its own composition so the index reads like a designed page, not a card grid. */
-const LAYOUT = ['xl', 'plain', 'tall', 'plain', 'wide', 'inverse', 'plain', 'tall', 'plain', 'wide', 'xl', 'plain', 'inverse', 'plain', 'wide', 'plain'] as const;
 
 export default function ArchiveIndex() {
   return (
@@ -27,7 +26,7 @@ export default function ArchiveIndex() {
                 <Link to={s.to} className={`toc__link panel ${layout === 'inverse' ? 'panel--paper' : 'panel--black'} ${hasArt ? 'panel--bleed' : ''}`}>
                   {hasArt && (
                     <div className="toc__art">
-                      <InkArt variant={s.art} seed={s.no} showCredit={false} label={s.title} />
+                      <InkArt variant={s.art} seed={slotKey.index(s.title)} showCredit={false} label={s.title} />
                     </div>
                   )}
                   <div className="toc__text">

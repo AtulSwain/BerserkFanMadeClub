@@ -4,6 +4,7 @@ import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
+import { slotKey } from '@/data/slots';
 import { Ja, Stamp } from '@/components/Manga';
 import { archive, hrefFor } from '@/data/archive';
 import type { Character } from '@/data/types';
@@ -132,7 +133,7 @@ export default function CharacterDossier() {
             <Reveal as="li" key={i} className="strip__cell" delay={i * 60}>
               <div className="strip__panel panel panel--bleed panel--black">
                 <Spoiler level={t.spoiler} block>
-                  <InkArt variant={t.art ?? c.art} seed={`${c.id}-${i}`} showCredit={false} label={t.stage} />
+                  <InkArt variant={t.art ?? c.art} seed={slotKey.characterStage(c.id, i)} showCredit={false} label={t.stage} />
                 </Spoiler>
               </div>
               <span className="strip__stage">

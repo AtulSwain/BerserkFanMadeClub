@@ -33,7 +33,7 @@ export default function Origins() {
         />
         <div className="origins">
           <Reveal className="origins__portrait panel panel--bleed panel--black">
-            <InkArt variant="hand" seed="miura" label="A drawing hand" />
+            <InkArt variant="hand" seed="origins-miura" label="A drawing hand" />
           </Reveal>
           <ol className="origins__line">
             {milestones.map((m, i) => (

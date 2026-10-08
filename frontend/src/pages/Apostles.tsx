@@ -6,6 +6,7 @@ import { FactLine, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
 import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
+import { slotKey } from '@/data/slots';
 import { archive } from '@/data/archive';
 import type { Apostle } from '@/data/types';
 
@@ -26,10 +27,10 @@ function Transformation({ a }: { a: Apostle }) {
       </svg>
       <div className="transform__stage panel panel--bleed panel--black" style={{ filter: hidden ? 'blur(10px)' : undefined }}>
         <div className="transform__layer" style={{ opacity: 1 - t, filter: `url(#${fid})` }}>
-          <InkArt variant="figure" seed={`${a.id}-h`} showCredit={false} label={`${a.name}, human form`} />
+          <InkArt variant="figure" seed={slotKey.apostleHuman(a.id)} showCredit={false} label={`${a.name}, human form`} />
         </div>
         <div className="transform__layer" style={{ opacity: t, filter: `url(#${fid})` }}>
-          <InkArt variant={a.art ?? 'beast'} seed={`${a.id}-a`} showCredit={false} label={`${a.name}, apostle form`} />
+          <InkArt variant={a.art ?? 'beast'} seed={slotKey.apostleForm(a.id)} showCredit={false} label={`${a.name}, apostle form`} />
         </div>
         <div className="transform__flash" style={{ opacity: Math.sin(Math.PI * t) * 0.55 }} />
         <span className="panel__caption">{stage}</span>

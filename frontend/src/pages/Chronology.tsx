@@ -5,6 +5,7 @@ import { Ja } from '@/components/Manga';
 import { FactLine, FactList } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
 import { InkArt } from '@/art/InkArt';
+import { slotKey } from '@/data/slots';
 import { archive } from '@/data/archive';
 
 /** A giant horizontal chronology: each arc is a chapter divider followed by its pages. */
@@ -128,7 +129,7 @@ export default function Chronology() {
             {ai < arcs.length - 1 && (
               <div className="chrono__gutter" aria-hidden="true">
                 <div className="chrono__gutter-panel panel panel--bleed panel--black panel--slant">
-                  <InkArt variant={arcs[ai + 1].art} seed={`g-${a.id}`} showCredit={false} sfx="auto" sfxPos="tl" />
+                  <InkArt variant={arcs[ai + 1].art} seed={slotKey.arcGutter(arcs[ai + 1].id)} showCredit={false} sfx="auto" sfxPos="tl" />
                 </div>
                 <span className="chrono__line" />
               </div>

@@ -1,30 +1,47 @@
 import type { Asset } from './types';
-import manifest from './panels.json';
+import creditsFile from '../assets/panels/credits.json';
 
-interface PanelEntry {
-  file: string;
-  alt: string;
-  credit: string;
-  license: string;
+/**
+ * Pictures in src/assets/panels/, found automatically at build time.
+ * The file name (without extension) is the slot key: `guts.jpg` → slot "guts".
+ */
+const files = import.meta.glob('../assets/panels/*.{jpg,jpeg,png,webp,avif,gif}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
+
+interface Credit {
+  alt?: string;
+  credit?: string;
+  license?: string;
   sourceUrl?: string;
 }
 
-const entries = (manifest as { panels: Record<string, PanelEntry> }).panels;
+const credits = (creditsFile as { credits: Record<string, Credit> }).credits ?? {};
 
-/**
- * Licensed artwork registered in panels.json, keyed by drawing key
- * (an entity id such as "guts", or a panel key such as "ev-eclipse-0").
- * Any key without an entry keeps its original placeholder drawing.
- */
+const byKey = new Map<string, { url: string; file: string }>();
+for (const [path, url] of Object.entries(files)) {
+  const file = path.split('/').pop()!;
+  const key = file.replace(/\.[^.]+$/, '').toLowerCase();
+  byKey.set(key, { url, file });
+}
+
 export function assetFor(key: string | undefined): Asset | undefined {
   if (!key) return undefined;
-  const e = entries[key];
-  if (!e) return undefined;
+  const hit = byKey.get(key.toLowerCase());
+  if (!hit) return undefined;
+  const c = credits[key] ?? {};
   return {
-    src: `${import.meta.env.BASE_URL}panels/${e.file}`,
-    alt: e.alt,
-    credit: e.credit,
-    license: e.license,
-    sourceUrl: e.sourceUrl,
+    src: hit.url,
+    alt: c.alt ?? key.replace(/-/g, ' '),
+    credit: c.credit ?? 'Credit needed',
+    license: c.license ?? 'license not recorded',
+    sourceUrl: c.sourceUrl,
   };
+}
+
+/** File name currently filling a slot, if any (used by the dev slot labels). */
+export function fileFor(key: string): string | undefined {
+  return byKey.get(key.toLowerCase())?.file;
 }
