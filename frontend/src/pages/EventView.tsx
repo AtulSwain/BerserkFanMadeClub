@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Page, Reveal, Xref, XrefList } from '@/components/Page';
 import { FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { archive, nameOf } from '@/data/archive';
 import type { StoryEvent } from '@/data/types';
@@ -64,6 +65,7 @@ export default function EventView() {
                 <SourceMarks ids={ev.sources} />
               </Spoiler>
             </p>
+            <WikiLink e={ev} />
             <span className="label">Consequences</span>
             <FactList facts={ev.consequences} />
           </div>

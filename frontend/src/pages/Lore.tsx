@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, XrefList } from '@/components/Page';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { archive } from '@/data/archive';
 
 const WORLD_LINKS = [
@@ -72,6 +73,7 @@ export default function Lore() {
                 <SourceMarks ids={e.sources} />
               </Spoiler>
             </p>
+            <WikiLink e={e} />
 
             <div className="folio-entry__grid">
               <section>

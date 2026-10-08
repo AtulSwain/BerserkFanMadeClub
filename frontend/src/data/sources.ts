@@ -59,6 +59,17 @@ export const sources: Source[] = [
     note: 'States that the series continues under Studio Gaga with supervision by Kouji Mori, based on story details Miura had shared.',
   },
   {
+    id: 'src-berserk-wiki',
+    title: 'Berserk Wiki',
+    type: 'Secondary',
+    publication: 'Fandom community wiki',
+    date: 'ongoing',
+    url: 'https://berserk.fandom.com/wiki/Berserk_Wiki',
+    confidence: 'medium',
+    status: 'Secondary source',
+    note: 'Community-written encyclopedia; text under CC BY-SA. Each entry here links to its wiki article for images and further detail. Claims are checked against the manga before being marked canon.',
+  },
+  {
     id: 'src-anime-1997',
     title: 'Kenpū Denki Berserk (TV series)',
     type: 'Anime',

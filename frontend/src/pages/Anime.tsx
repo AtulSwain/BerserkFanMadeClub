@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Page, PageHead, Reveal } from '@/components/Page';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { archive } from '@/data/archive';
 
@@ -60,6 +61,7 @@ export default function Anime() {
                     <SourceMarks ids={a.sources} />
                   </Spoiler>
                 </p>
+                <WikiLink e={a} />
                 <dl className="spec">
                   <dt>Episodes</dt>
                   <dd>{a.episodes}</dd>

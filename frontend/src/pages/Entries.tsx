@@ -1,6 +1,7 @@
 import { Page, PageHead, Reveal, XrefList } from '@/components/Page';
 import { FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { archive } from '@/data/archive';
 import type { SimpleEntry } from '@/data/types';
@@ -83,6 +84,7 @@ export default function Entries({ kind }: { kind: 'faction' | 'creature' | 'glos
                   <SourceMarks ids={c.sources} />
                 </Spoiler>
               </p>
+              <WikiLink e={c} />
               <FactList facts={c.facts} />
               <CanonTag c={c.canon} />
             </Reveal>

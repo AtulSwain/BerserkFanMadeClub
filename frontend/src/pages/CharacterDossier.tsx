@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Page, Reveal, Xref, XrefList, InkRule } from '@/components/Page';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { Stamp } from '@/components/Manga';
 import { archive, hrefFor } from '@/data/archive';
@@ -51,6 +52,7 @@ export default function CharacterDossier() {
                 <SourceMarks ids={c.sources} />
               </Spoiler>
             </div>
+            <WikiLink e={c} />
 
             <dl className="spec">
               <dt>Name</dt>

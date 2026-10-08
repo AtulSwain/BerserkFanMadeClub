@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Page, Xref } from '@/components/Page';
 import { FactLine, FactList, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { archive } from '@/data/archive';
 import type { GodHandMember } from '@/data/types';
 
@@ -108,6 +109,7 @@ function FullDossier({ m, onClose }: { m: GodHandMember; onClose: () => void }) 
             <SourceMarks ids={m.sources} />
           </Spoiler>
         </p>
+        <WikiLink e={m} />
         <dl className="spec">
           <dt>Human origin</dt>
           <dd><FactLine f={m.humanOrigin} /></dd>

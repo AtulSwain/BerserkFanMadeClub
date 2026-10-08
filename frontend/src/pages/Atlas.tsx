@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Page, PageHead } from '@/components/Page';
 import { FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { useSpoilers } from '@/context/SpoilerContext';
 import { archive } from '@/data/archive';
 import type { LocationEntry } from '@/data/types';
@@ -176,6 +177,7 @@ export default function Atlas() {
                   <SourceMarks ids={sel.sources} />
                 </Spoiler>
               </p>
+              <WikiLink e={sel} />
               <FactList facts={sel.facts} />
               <span className="margin-note" style={{ display: 'block', marginTop: 16 }}>
                 position on map: approximate

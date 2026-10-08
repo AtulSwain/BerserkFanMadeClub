@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, XrefList } from '@/components/Page';
 import { FactLine, FactList, CanonTag, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { Blueprint } from '@/art/Blueprint';
 import { archive } from '@/data/archive';
 
@@ -62,6 +63,7 @@ export default function Weapons() {
               <SourceMarks ids={w.sources} />
             </Spoiler>
           </p>
+          <WikiLink e={w} />
 
           <div className="plate-sheet__cols">
             <dl className="spec">

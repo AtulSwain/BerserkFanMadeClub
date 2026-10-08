@@ -75,6 +75,8 @@ export interface BaseEntity {
   asset?: Asset;
   /** Seed for the placeholder art generator. */
   art?: ArtVariant;
+  /** Exact Berserk Wiki article title when it differs from `name`. */
+  wiki?: string;
 }
 
 export type ArtVariant =

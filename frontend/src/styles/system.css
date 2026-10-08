@@ -1000,3 +1000,30 @@
 .art--asset img {
   filter: grayscale(1) contrast(1.15) brightness(0.95);
 }
+
+/* link out to the community wiki */
+.wiki-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 4px 0 16px;
+  padding: 6px 12px 5px;
+  border: 1px dashed currentColor;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transform: rotate(-0.6deg);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.wiki-link__site {
+  color: var(--blood);
+}
+.wiki-link:hover {
+  background: var(--blood);
+  border-color: var(--blood);
+  color: var(--white-ink);
+}
+.wiki-link:hover .wiki-link__site {
+  color: var(--white-ink);
+}

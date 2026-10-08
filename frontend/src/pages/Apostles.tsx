@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Page, PageHead, Reveal, Xref, XrefList } from '@/components/Page';
 import { FactLine, SourceMarks } from '@/components/Canon';
 import { Spoiler, useIsHidden } from '@/components/Spoiler';
+import { WikiLink } from '@/components/WikiLink';
 import { InkArt } from '@/art/InkArt';
 import { archive } from '@/data/archive';
 import type { Apostle } from '@/data/types';
@@ -104,6 +105,7 @@ export default function Apostles() {
                 <SourceMarks ids={a.sources} />
               </Spoiler>
             </p>
+            <WikiLink e={a} />
           </div>
 
           <Reveal className="apostle__transform">
