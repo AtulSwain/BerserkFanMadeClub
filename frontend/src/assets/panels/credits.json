@@ -1,5 +1,11 @@
 {
   "$schema": "./credits.schema.json",
   "_help": "Optional. Add an entry only to give a picture a caption, artist credit or license. The key is the image file name without its extension. Run `npm run panels` to see every key.",
-  "credits": {}
+  "credits": {
+    "cover": {
+      "alt": "Fan illustration: the Brand of Sacrifice framing Guts, Griffith, Casca, the God Hand and the Dragon Slayer, drawn in black ink",
+      "credit": "Fan illustration — artist credit to be added",
+      "license": "Shared by the archive owner"
+    }
+  }
 }

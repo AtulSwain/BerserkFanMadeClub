@@ -157,6 +157,24 @@
   background: linear-gradient(90deg, var(--ink) 0%, transparent 28%), linear-gradient(0deg, var(--ink) 0%, transparent 25%);
   pointer-events: none;
 }
+.prologue__hero--art {
+  /* the supplied cover is a 2:3 portrait — show it whole */
+  aspect-ratio: 2 / 3;
+  justify-self: center;
+  max-width: 100%;
+}
+.prologue__hero--art .prologue__hero-frame {
+  clip-path: polygon(3% 0, 100% 1%, 98% 100%, 0 98%, 1% 40%);
+}
+.prologue__hero--art .prologue__hero-frame::after {
+  background: linear-gradient(0deg, rgba(11, 10, 10, 0.55) 0%, transparent 18%);
+}
+.prologue__hero--art .prologue__hero-drift {
+  inset: -3% 0;
+}
+.prologue__hero--art .art img {
+  filter: grayscale(1) contrast(1.05);
+}
 .prologue__hero-drift {
   position: absolute;
   inset: -8% 0;
@@ -791,4 +809,14 @@
   .edge-nav__brand-sub {
     display: none;
   }
+}
+/* keep the artist credit inside the cut frame, and the seal off the drawing */
+.prologue__hero--art .art__credit {
+  bottom: 4%;
+  left: 4%;
+}
+.prologue__hero--art .prologue__hanko {
+  right: -28px;
+  top: -18px;
+  bottom: auto;
 }

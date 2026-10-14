@@ -9,6 +9,7 @@ import { Atmosphere } from '@/fx/Atmosphere';
 import { BrandMark } from '@/fx/BrandMark';
 import { useParallax } from '@/fx/motion';
 import { archive } from '@/data/archive';
+import { assetFor } from '@/data/assets';
 import type { ArtVariant } from '@/data/types';
 
 /** The five chapters of the homepage, each opening onto a part of the archive. */
@@ -74,6 +75,8 @@ function Chapter({
 export default function Home() {
   const open = useOpenArchive();
   const heroDrift = useParallax<HTMLDivElement>(0.14);
+  // A real cover picture (src/assets/panels/cover.*) is shown whole, without lettering over it.
+  const coverArt = assetFor('cover');
 
   return (
     <>
@@ -99,12 +102,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="prologue__hero">
+        <div className={`prologue__hero ${coverArt ? 'prologue__hero--art' : ''}`}>
           <div className="prologue__hero-frame">
             <div className="prologue__hero-drift" ref={heroDrift}>
-              <InkArt variant="swordsman" seed="cover" label="A swordsman seen from behind" sfx="auto" sfxPos="tr" />
+              <InkArt variant="swordsman" seed="cover" label="A swordsman seen from behind" sfx={coverArt ? undefined : 'auto'} sfxPos="tr" />
             </div>
-            <Balloon tail="right" className="cover__balloon">…</Balloon>
+            {!coverArt && <Balloon tail="right" className="cover__balloon">…</Balloon>}
           </div>
           <Hanko text="狂戦士" size={70} className="prologue__hanko" />
         </div>
