@@ -6,10 +6,10 @@ import { Spoiler } from '@/components/Spoiler';
 import { useOpenArchive } from '@/context/OpenArchive';
 import { Balloon, Hanko, Ja } from '@/components/Manga';
 import { Atmosphere } from '@/fx/Atmosphere';
-import { BrandMark } from '@/fx/BrandMark';
 import { useParallax } from '@/fx/motion';
 import { archive } from '@/data/archive';
 import { assetFor } from '@/data/assets';
+import logoUrl from '@/assets/brand/berserk-logo.png';
 import type { ArtVariant } from '@/data/types';
 
 /** The five chapters of the homepage, each opening onto a part of the archive. */
@@ -82,8 +82,8 @@ export default function Home() {
     <>
       {/* ── Prologue ─────────────────────────────────────────── */}
       <section className="prologue" aria-label="Berserk: The Struggler’s Archive">
+        <img className="prologue__logo" src={logoUrl} alt="" aria-hidden="true" decoding="async" />
         <Atmosphere density={80} embers={0.07} />
-        <BrandMark className="prologue__brand" />
 
         <div className="prologue__text">
           <span className="label prologue__kicker">Unofficial fan archive · 1989 — present</span>

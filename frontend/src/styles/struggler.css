@@ -57,6 +57,23 @@
   overflow: hidden;
   isolation: isolate;
 }
+.prologue__logo {
+  /* the ベルセルク logo, faint and huge behind the whole prologue */
+  position: absolute;
+  left: 31%;
+  top: 50%;
+  width: min(54vw, 780px);
+  height: auto;
+  translate: -50% -50%;
+  rotate: -5deg;
+  opacity: 0.13;
+  animation: smoulder-logo 8s ease-in-out infinite;
+  filter: saturate(0.8) blur(0.6px);
+  mix-blend-mode: screen;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
 .prologue__brand {
   position: absolute;
   left: 18%;
@@ -68,6 +85,11 @@
   opacity: 0.16;
   z-index: 0;
   animation: smoulder 7s ease-in-out infinite;
+}
+@keyframes smoulder-logo {
+  50% {
+    opacity: 0.18;
+  }
 }
 @keyframes smoulder {
   50% {
@@ -750,6 +772,12 @@
     top: 28%;
     width: 70vw;
   }
+  .prologue__logo {
+    left: 50%;
+    top: 66%;
+    width: 120vw;
+    rotate: -6deg;
+  }
   .prologue__hero {
     height: 56vh;
     order: -1;
@@ -787,7 +815,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .atmosphere__fog,
-  .prologue__brand {
+  .prologue__brand,
+  .prologue__logo {
     animation: none;
   }
   .reveal--shard {
