@@ -1,0 +1,25 @@
+{
+  // Autocomplete + validation of slot names in the image credits file.
+  "json.schemas": [
+    {
+      "fileMatch": ["images/credits.json"],
+      "url": "./images/credits.schema.json"
+    }
+  ],
+  // Keep the panels folder readable: images first, helper files tucked under README.
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "README.md": "IMAGE-LIST.md, credits.json, credits.schema.json"
+  },
+  // Open the checklist as a rendered page.
+  "workbench.editorAssociations": {
+    "images/IMAGE-LIST.md": "vscode.markdown.preview.editor"
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "files.associations": {
+    "credits.json": "jsonc"
+  }
+}

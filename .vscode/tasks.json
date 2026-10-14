@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Images: update the list",
+      "detail": "Rescan images/ and rewrite images/IMAGE-LIST.md",
+      "type": "npm",
+      "script": "panels",
+      "path": "frontend",
+      "problemMatcher": []
+    },
+    {
+      "label": "Site: start dev server",
+      "detail": "Opens on http://localhost:5173 — use the yellow \"Show image names\" button",
+      "type": "npm",
+      "script": "dev",
+      "path": "frontend",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Images: open the list",
+      "type": "shell",
+      "command": "code images/IMAGE-LIST.md",
+      "problemMatcher": []
+    }
+  ]
+}
