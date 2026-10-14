@@ -19,7 +19,7 @@ Prologue & five-chapter homepage · Legacy tribute to Kentaro Miura · Archive i
 
 Every drawing is an original fan illustration built in code with seinen-manga technique: cross-hatching, screentone, rim light, focus and speed lines, hand-lettered katakana sound effects and speech balloons. No Berserk panels or official illustrations are included.
 
-To use real images you own or have permission to publish, drop them into [`frontend/src/assets/panels/`](frontend/src/assets/panels/) named after their slot (e.g. `guts.jpg`) — no code to edit. [`SLOTS.md`](frontend/src/assets/panels/SLOTS.md) lists every slot and which are filled; open the repo in VS Code and use **Run Task… → Panels: update image checklist** to refresh it. Full steps: [`frontend/src/assets/panels/README.md`](frontend/src/assets/panels/README.md).
+**Adding pictures:** every picture goes in the top-level [`images/`](images/) folder. [`images/IMAGE-LIST.md`](images/IMAGE-LIST.md) lists the exact file name for each spot on the site (most visible first) — save a picture with that name, e.g. `images/guts.jpg`, and it replaces the drawing. No code to edit. Steps: [`images/README.md`](images/README.md).
 
 ## See it
 
@@ -57,6 +57,7 @@ To use real images you own or have permission to publish, drop them into [`front
 backend/            FastAPI read API + unmounted admin API
 database/schema.sql PostgreSQL schema (entities, claims, sources, links)
 docs/CMS.md         data model, source system and CMS notes
+images/             all site pictures + IMAGE-LIST.md (what to add, by name)
 frontend/src/
   art/              original placeholder art, blueprints, demo manga page
   components/       page frame, panels, spoilers, canon stamps, nav, search

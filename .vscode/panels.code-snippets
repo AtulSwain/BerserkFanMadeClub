@@ -2,7 +2,7 @@
   "Panel credit": {
     "scope": "json,jsonc",
     "prefix": "credit",
-    "description": "Credit entry for an image in src/assets/panels",
+    "description": "Credit entry for an image in images/",
     "body": [
       "\"${1:slot-key}\": {",
       "  \"alt\": \"${2:What the picture shows}\",",

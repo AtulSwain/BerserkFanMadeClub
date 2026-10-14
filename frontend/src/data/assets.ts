@@ -1,11 +1,12 @@
 import type { Asset } from './types';
-import creditsFile from '../assets/panels/credits.json';
+import creditsFile from '../../../images/credits.json';
 
 /**
- * Pictures in src/assets/panels/, found automatically at build time.
+ * Pictures in the top-level images/ folder, found automatically at build time.
  * The file name (without extension) is the slot key: `guts.jpg` → slot "guts".
+ * images/IMAGE-LIST.md lists every name the site uses.
  */
-const files = import.meta.glob('../assets/panels/*.{jpg,jpeg,png,webp,avif,gif}', {
+const files = import.meta.glob('../../../images/*.{jpg,jpeg,png,webp,avif,gif}', {
   eager: true,
   query: '?url',
   import: 'default',

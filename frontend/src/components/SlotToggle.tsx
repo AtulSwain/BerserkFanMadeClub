@@ -4,7 +4,7 @@ const KEY = 'berserk-archive:show-slots';
 
 /**
  * Dev-only switch (npm run dev): labels every picture with the file name it
- * expects in src/assets/panels/, so you can see what to drop in where.
+ * expects in the top-level images/ folder, so you can see what to drop in where.
  */
 export function SlotToggle() {
   const [on, setOn] = useState(() => {

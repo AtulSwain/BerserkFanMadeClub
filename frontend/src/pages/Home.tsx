@@ -9,7 +9,6 @@ import { Atmosphere } from '@/fx/Atmosphere';
 import { useParallax } from '@/fx/motion';
 import { archive } from '@/data/archive';
 import { assetFor } from '@/data/assets';
-import logoUrl from '@/assets/brand/berserk-logo.png';
 import type { ArtVariant } from '@/data/types';
 
 /** The five chapters of the homepage, each opening onto a part of the archive. */
@@ -75,14 +74,15 @@ function Chapter({
 export default function Home() {
   const open = useOpenArchive();
   const heroDrift = useParallax<HTMLDivElement>(0.14);
-  // A real cover picture (src/assets/panels/cover.*) is shown whole, without lettering over it.
+  // A real cover picture (images/cover.*) is shown whole, without lettering over it.
   const coverArt = assetFor('cover');
+  const logo = assetFor('home-logo');
 
   return (
     <>
       {/* ── Prologue ─────────────────────────────────────────── */}
       <section className="prologue" aria-label="Berserk: The Struggler’s Archive">
-        <img className="prologue__logo" src={logoUrl} alt="" aria-hidden="true" decoding="async" />
+        {logo && <img className="prologue__logo" src={logo.src} alt="" aria-hidden="true" decoding="async" />}
         <Atmosphere density={80} embers={0.07} />
 
         <div className="prologue__text">

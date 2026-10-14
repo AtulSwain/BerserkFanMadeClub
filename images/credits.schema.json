@@ -14,6 +14,7 @@
       "description": "Key = image file name without extension.",
       "propertyNames": {
         "enum": [
+          "home-logo",
           "cover",
           "home-struggler",
           "home-golden-age",

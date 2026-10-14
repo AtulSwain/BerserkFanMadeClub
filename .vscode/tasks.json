@@ -2,8 +2,8 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Panels: update image checklist",
-      "detail": "Rescan src/assets/panels and rewrite SLOTS.md",
+      "label": "Images: update the list",
+      "detail": "Rescan images/ and rewrite images/IMAGE-LIST.md",
       "type": "npm",
       "script": "panels",
       "path": "frontend",
@@ -19,9 +19,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Panels: open image folder",
+      "label": "Images: open the list",
       "type": "shell",
-      "command": "code frontend/src/assets/panels/SLOTS.md",
+      "command": "code images/IMAGE-LIST.md",
       "problemMatcher": []
     }
   ]

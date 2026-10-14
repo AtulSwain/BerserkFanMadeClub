@@ -1,21 +1,29 @@
-# Adding pictures
+# Images
 
-Every picture on the site is a drawing until you drop a real image into **this folder**.
+**All pictures for the site go in this one folder.** Nothing else to edit.
 
-## In VS Code — three steps
+## The list
 
-1. **Find the name.** Open [`SLOTS.md`](SLOTS.md) — it lists every picture slot (⬜ empty, ✅ filled),
-   grouped by page, with the exact file name to use and the shape to crop to.
-   *Or* run the site (`Terminal → Run Task… → Site: start dev server`), click the yellow
-   **Show image names** button, and every picture shows the file name it wants.
-2. **Drop the image here** with that name, e.g. `guts.jpg`, `ev-eclipse-panel-1.jpg`.
-   `.jpg .jpeg .png .webp .avif` all work. Drag the file from your computer onto this folder
-   in the VS Code Explorer.
-3. **Reload the site.** The picture replaces the drawing, shown in black-and-white ink style.
+Open **[`IMAGE-LIST.md`](IMAGE-LIST.md)**. It names every picture the site can show, with
+⭐ the most visible ones first:
 
-Then run `Terminal → Run Task… → Panels: update image checklist` (or `npm run panels` in
-`frontend/`) to tick it off in `SLOTS.md`. The checklist also warns you about any file whose
-name doesn't match a slot (usually a typo).
+| | Save the picture as | Where it shows on the site | Shape |
+|---|---|---|---|
+| ⬜ | `guts.jpg` | Guts — portrait (dossier + cast strip) | tall |
+
+## Adding a picture — three steps
+
+1. **Pick a name** from `IMAGE-LIST.md`, e.g. `guts`.
+2. **Save the picture here** with that name: `images/guts.jpg`. In VS Code, drag the file
+   from your computer onto the `images` folder. `.jpg .png .webp .avif` all work — only the
+   name before the dot matters.
+3. **Reload the site.** The picture replaces the drawing.
+
+Then run **Terminal → Run Task… → Images: update the list** to tick it off (✅) in
+`IMAGE-LIST.md`. If a file name has a typo, the list warns you at the top.
+
+Tip: run the site (**Run Task… → Site: start dev server**) and click the yellow
+**Show image names** button — every picture on every page shows the name it wants.
 
 ## Credits (recommended)
 
@@ -37,8 +45,8 @@ VS Code autocompletes the slot names. Without an entry the picture shows “Cred
 - About 1200–1600 px on the long side is plenty. Larger files only slow the site down.
 - Install the recommended **Image Preview** extension (VS Code will offer it) to see thumbnails
   next to file names.
-- The slot names come from `src/data/slots.ts` — new characters or events get new slots
-  automatically; run the checklist task to see them.
+- The names come from `frontend/src/data/slots.ts` — new characters or events get new names
+  automatically; run the update task to see them.
 
 ## Reference shelf (look, don't copy)
 

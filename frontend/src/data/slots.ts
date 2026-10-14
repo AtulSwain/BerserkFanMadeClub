@@ -1,11 +1,11 @@
 /**
  * Every place on the site that shows a picture, and the image file name it expects.
  *
- * Drop `<key>.jpg` (or .png / .webp / .avif) into `src/assets/panels/` and that
+ * Drop `<key>.jpg` (or .png / .webp / .avif) into the top-level `images/` folder and that
  * picture replaces the drawing. Pages build their keys with `slotKey` below, so
  * this list and the site can never disagree.
  *
- * Run `npm run panels` to regenerate the checklist (src/assets/panels/SLOTS.md).
+ * Run `npm run panels` to regenerate the list (images/IMAGE-LIST.md).
  */
 import { characters } from './characters';
 import { apostles } from './apostles';
@@ -42,6 +42,7 @@ export function listSlots(): Slot[] {
   const out: Slot[] = [];
   const add = (s: Slot) => out.push(s);
 
+  add({ key: 'home-logo', section: 'Home', where: 'Logo shown faintly behind the homepage title (transparent PNG works best)', page: '/', shape: 'landscape' });
   add({ key: 'cover', section: 'Home', where: 'Hero illustration on the homepage (full height, right side)', page: '/', shape: 'portrait' });
   add({ key: 'home-struggler', section: 'Home', where: 'Chapter I · The Struggler', page: '/', shape: 'landscape' });
   add({ key: 'home-golden-age', section: 'Home', where: 'Chapter II · The Golden Age', page: '/', shape: 'landscape' });
