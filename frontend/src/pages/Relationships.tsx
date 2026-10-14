@@ -23,11 +23,11 @@ const POS: Record<string, { x: number; y: number }> = {
 };
 
 export const REL_STYLE: Record<RelationType, { label: string; stroke: string; dash?: string; width: number }> = {
-  ally: { label: 'Ally', stroke: '#080808', width: 2 },
-  conflict: { label: 'Conflict', stroke: '#080808', dash: '12 7', width: 2 },
-  hatred: { label: 'Hatred', stroke: '#7d1111', width: 4 },
+  ally: { label: 'Ally', stroke: '#0b0a0a', width: 2 },
+  conflict: { label: 'Conflict', stroke: '#0b0a0a', dash: '12 7', width: 2 },
+  hatred: { label: 'Hatred', stroke: '#8c2425', width: 4 },
   historical: { label: 'Historical connection', stroke: '#8c7340', width: 2.5 },
-  unknown: { label: 'Unknown', stroke: '#080808', dash: '2 5', width: 3 },
+  unknown: { label: 'Unknown', stroke: '#0b0a0a', dash: '2 5', width: 3 },
 };
 
 function Edge({ r, active, dim, onPick }: { r: Relationship; active: boolean; dim: boolean; onPick: () => void }) {
@@ -75,8 +75,8 @@ function Node({ id, focus, onFocus }: { id: string; focus: string | null; onFocu
       onClick={() => onFocus(id)}
       onKeyDown={(ev) => (ev.key === 'Enter' || ev.key === ' ') && (ev.preventDefault(), onFocus(id))}
     >
-      <rect x={-w / 2} y={-18} width={w} height={36} fill={on || isCenter ? '#080808' : '#d8d2c5'} stroke="#080808" strokeWidth={2} filter="url(#ink-rough)" />
-      <text textAnchor="middle" y={6} className="rel-node__label" fill={on || isCenter ? '#f1eee6' : '#080808'} style={{ filter: hidden ? 'blur(4px)' : undefined }}>
+      <rect x={-w / 2} y={-18} width={w} height={36} fill={on || isCenter ? '#0b0a0a' : '#e4dccb'} stroke="#0b0a0a" strokeWidth={2} filter="url(#ink-rough)" />
+      <text textAnchor="middle" y={6} className="rel-node__label" fill={on || isCenter ? '#efe8da' : '#0b0a0a'} style={{ filter: hidden ? 'blur(4px)' : undefined }}>
         {label}
       </text>
     </g>
@@ -139,8 +139,8 @@ export default function Relationships() {
             ))}
             {pickedPos && (
               <g transform={`translate(${pickedPos.x} ${pickedPos.y})`} pointerEvents="none">
-                <circle r={9} fill="none" stroke="#7d1111" strokeWidth={2} />
-                <circle r={2.5} fill="#7d1111" />
+                <circle r={9} fill="none" stroke="#8c2425" strokeWidth={2} />
+                <circle r={2.5} fill="#8c2425" />
               </g>
             )}
           </svg>

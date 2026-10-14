@@ -1,10 +1,19 @@
-# Berserk Archive
+# Berserk: The Struggler’s Archive
 
-Berserk Archive — *The Manga Archive* — is a fan-made encyclopedia of Kentaro Miura's Berserk, designed as an interactive manga volume: chapter tabs, panels, gutters, folios, marginalia and ink. Every claim carries a canon classification and sources; spoilers are hidden by default.
+*In a world governed by fate, one man continues to struggle.*
+
+The Struggler’s Archive is an unofficial, fan-made encyclopedia of Kentaro Miura's Berserk, designed as an interactive manga volume: chapter tabs, panels, gutters, folios, marginalia and ink. Every claim carries a canon classification and sources; spoilers are hidden by default.
+
+### Design
+
+- **Palette:** abyss black `#0B0A0A`, charcoal `#24211F`, aged parchment `#E4DCCB`, dried crimson `#8C2425` — red used sparingly, for emphasis only.
+- **Type:** Cinzel for titles, Cormorant Garamond for story passages, Inter for interface text; Shippori Mincho and Yuji Syuku for Japanese.
+- **Motion:** an almost-black prologue with a faint, smouldering brand mark; drifting ash, embers and fog; slow parallax; irregular panel-shaped reveals; an ink-spread transition between pages; thin crimson lines on the active tab; and a single Eclipse transition reserved for the Eclipse entry. All of it switches off under *reduce motion*.
+- **Homepage:** prologue, then five chapters — The Struggler, The Golden Age, The Characters, The World of Berserk, The Legacy.
 
 ### Sections
 
-Cover with page-split entry · Archive index (16 chapters) · Character database & dossiers with development strips · Relationship map · Factions · Apostle database with interactive transformation · God Hand chamber · Weapons arsenal (blueprint plates) · Horizontal chronology & cinematic event views · Lore manuscript · Hand-drawn atlas · Manga craft essay · Interactive panel analysis · Shot-type cinematography · Anime archive · Manga vs anime comparison · Music · Volume shelf · Global search · Bibliography.
+Prologue & five-chapter homepage · Legacy tribute to Kentaro Miura · Archive index (16 chapters) · Character database & dossiers with development strips · Relationship map · Factions · Apostle database with interactive transformation · God Hand chamber · Weapons arsenal (blueprint plates) · Horizontal chronology & cinematic event views · Lore manuscript · Hand-drawn atlas · Manga craft essay · Interactive panel analysis · Shot-type cinematography · Anime archive · Manga vs anime comparison · Music · Volume shelf · Global search · Bibliography.
 
 ### Artwork
 
@@ -17,9 +26,9 @@ To use real images you own or have permission to publish, drop them into [`front
 **Live site:** once this repository's GitHub Pages is enabled (see *Deploy* below), the site is published at
 `https://atulswain.github.io/BerserkFanMadeClub/` on every push to `main`.
 
-| Cover | Archive index |
+| Prologue | Archive index |
 |---|---|
-| ![Cover](docs/screenshots/cover.jpg) | ![Archive index](docs/screenshots/archive-index.jpg) |
+| ![Prologue](docs/screenshots/cover.jpg) | ![Archive index](docs/screenshots/archive-index.jpg) |
 | **Character dossier** | **Relationship map** |
 | ![Character dossier](docs/screenshots/character-dossier.jpg) | ![Relationship map](docs/screenshots/relationship-map.jpg) |
 | **God Hand** | **Weapons arsenal** |
@@ -28,6 +37,8 @@ To use real images you own or have permission to publish, drop them into [`front
 | ![Chronology](docs/screenshots/chronology.jpg) | ![Event view](docs/screenshots/event-eclipse.jpg) |
 | **Atlas** | **Panel analysis lab** |
 | ![Atlas](docs/screenshots/atlas.jpg) | ![Panel lab](docs/screenshots/panel-lab.jpg) |
+| **Legacy — Kentaro Miura** | |
+| ![Legacy](docs/screenshots/legacy.jpg) | |
 
 <p>
   <img src="docs/screenshots/mobile-cover.jpg" alt="Mobile cover" width="260" />
@@ -36,7 +47,7 @@ To use real images you own or have permission to publish, drop them into [`front
 
 ## Technology Stack
 
-- Frontend: React, TypeScript, Vite, React Router DOM, hand-written CSS (no UI or animation libraries — CSS animations, SVG filters and IntersectionObserver keep it fast)
+- Frontend: React, TypeScript, Vite, React Router DOM, hand-written CSS (no UI or animation libraries — CSS animations, a small canvas for ash, SVG filters and IntersectionObserver keep it fast)
 - Backend: Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL, Pydantic
 - Planned integrations: JWT authentication, Cloudinary, Meilisearch, Redis, Docker, analytics, localization, and cloud deployment
 
@@ -50,9 +61,10 @@ frontend/src/
   art/              original placeholder art, blueprints, demo manga page
   components/       page frame, panels, spoilers, canon stamps, nav, search
   data/             typed seed content + ArchiveRepository
+  fx/               atmosphere (ash, fog), brand mark, parallax, Eclipse wipe
   cms/              admin field definitions (not routed)
   pages/            one lazy-loaded chunk per section
-  styles/           tokens, base, system, chrome, pages
+  styles/           tokens, base, system, chrome, pages, struggler
 ```
 
 ## Installation
@@ -110,7 +122,11 @@ Build variants:
 
 Keep changes small, typed, documented, and aligned with the existing folder boundaries. Prefer reusable components, service modules, and backend business logic separated from route definitions.
 
-## License
+## License & credits
 
-This is a fan-made project and is not affiliated with, endorsed by, or sponsored by the owners of Berserk. Project code is intended for educational and non-commercial use.
+This is an unofficial fan-made project and is not affiliated with, endorsed by, or sponsored by Kentaro Miura's estate, Studio Gaga, Hakusensha, Young Animal, Dark Horse or any anime licensor. *Berserk* was created by Kentaro Miura (1966–2021) and continues under Studio Gaga, supervised by Kouji Mori. No manga chapters or scans are hosted here.
+
+Read it legally: [Dark Horse](https://www.darkhorse.com/) (English) · [Hakusensha](https://www.hakusensha.co.jp/) (Japanese) · [official portal](https://berserk-project.jp/).
+
+Project code is intended for educational and non-commercial use.
 

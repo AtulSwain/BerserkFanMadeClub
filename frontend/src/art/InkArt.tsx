@@ -14,8 +14,8 @@ import { assetFor, fileFor } from '@/data/assets';
 const W = 300;
 const H = 400;
 const INK = '#0a0a0a';
-const PAPER = '#f1eee6';
-const RED = '#7d1111';
+const PAPER = '#efe8da';
+const RED = '#8c2425';
 
 type R = () => number;
 

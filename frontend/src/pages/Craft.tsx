@@ -8,15 +8,15 @@ function HatchDemo() {
     <svg viewBox="0 0 300 120" className="craft-demo" role="img" aria-label="Comparison: cross-hatching versus dot screentone">
       <defs>
         <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse">
-          <circle cx="3" cy="3" r="1.4" fill="#080808" />
+          <circle cx="3" cy="3" r="1.4" fill="#0b0a0a" />
         </pattern>
       </defs>
-      <rect x="0" y="0" width="140" height="100" fill="#f1eee6" stroke="#080808" strokeWidth="2" />
-      {Array.from({ length: 30 }, (_, i) => <line key={i} x1={i * 6 - 40} y1={100} x2={i * 6 + 20} y2={0} stroke="#080808" strokeWidth="0.8" />)}
-      {Array.from({ length: 30 }, (_, i) => <line key={`b${i}`} x1={i * 6 - 40} y1={0} x2={i * 6 + 20} y2={100} stroke="#080808" strokeWidth="0.6" />)}
-      <rect x="160" y="0" width="140" height="100" fill="url(#dots)" stroke="#080808" strokeWidth="2" />
-      <text x="70" y="116" textAnchor="middle" className="bp-text" fill="#080808">CROSS-HATCHING</text>
-      <text x="230" y="116" textAnchor="middle" className="bp-text" fill="#080808">SCREENTONE</text>
+      <rect x="0" y="0" width="140" height="100" fill="#efe8da" stroke="#0b0a0a" strokeWidth="2" />
+      {Array.from({ length: 30 }, (_, i) => <line key={i} x1={i * 6 - 40} y1={100} x2={i * 6 + 20} y2={0} stroke="#0b0a0a" strokeWidth="0.8" />)}
+      {Array.from({ length: 30 }, (_, i) => <line key={`b${i}`} x1={i * 6 - 40} y1={0} x2={i * 6 + 20} y2={100} stroke="#0b0a0a" strokeWidth="0.6" />)}
+      <rect x="160" y="0" width="140" height="100" fill="url(#dots)" stroke="#0b0a0a" strokeWidth="2" />
+      <text x="70" y="116" textAnchor="middle" className="bp-text" fill="#0b0a0a">CROSS-HATCHING</text>
+      <text x="230" y="116" textAnchor="middle" className="bp-text" fill="#0b0a0a">SCREENTONE</text>
     </svg>
   );
 }

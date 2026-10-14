@@ -31,7 +31,7 @@
   white-space: nowrap;
 }
 .edge-nav__brand-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 9.5px;
   letter-spacing: 0.3em;
   color: var(--smoke);
@@ -64,7 +64,7 @@
   transition: height 0.25s var(--ease-ink), background 0.25s, color 0.25s;
 }
 .edge-tab__no {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 8.5px;
   letter-spacing: 0.2em;
   color: var(--smoke);
@@ -101,7 +101,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@
   color: var(--white-ink);
 }
 .edge-nav__search kbd {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   border: 1px solid var(--ash);
   padding: 0 5px;
   font-size: 10px;
@@ -119,7 +119,7 @@
 }
 .edge-nav__contents {
   display: none;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 9.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -242,7 +242,7 @@
   border-bottom: 1px solid rgba(8, 8, 8, 0.15);
 }
 .contents-drawer__no {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 11px;
   color: var(--blood);
   width: 22px;
@@ -336,7 +336,7 @@
 .search-overlay__hint {
   display: flex;
   gap: 18px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;

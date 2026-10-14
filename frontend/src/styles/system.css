@@ -9,21 +9,25 @@
   line-height: 0.86;
 }
 .chapter-title {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(42px, 7vw, 104px);
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: clamp(36px, 6vw, 90px);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 0.88;
+  letter-spacing: 0.03em;
+  line-height: 0.95;
+  text-wrap: balance;
 }
 .chapter-title em {
+  font-family: var(--font-display);
   font-style: italic;
   text-transform: none;
   letter-spacing: 0;
   font-weight: 400;
 }
 .section-title {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
+  font-weight: 600;
+  text-wrap: balance;
   font-size: clamp(28px, 3.6vw, 46px);
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -34,7 +38,7 @@
   text-transform: uppercase;
 }
 .label {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -115,7 +119,7 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -247,7 +251,7 @@
   z-index: 3;
   background: var(--white-ink);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -318,7 +322,7 @@
   align-items: center;
   gap: 14px;
   padding: 12px 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 12px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -394,7 +398,7 @@
   gap: 8px;
   padding: 6px 10px;
   border: 1px solid currentColor;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -420,7 +424,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 9.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -482,7 +486,7 @@
   flex: 1;
 }
 .fact__src {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 9.5px;
   vertical-align: super;
   color: var(--blood);
@@ -573,7 +577,7 @@
   z-index: 3;
 }
 .spoiler__reveal button {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -633,7 +637,7 @@
   position: absolute;
   right: 6px;
   bottom: 5px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 8.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -664,7 +668,7 @@
   border-bottom: 1px solid rgba(128, 128, 128, 0.35);
 }
 .spec > dt {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -905,7 +909,7 @@
    ───────────────────────────────────────────────────────────── */
 .stamp {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12px;
   letter-spacing: 0.22em;
@@ -1009,7 +1013,7 @@
   margin: 4px 0 16px;
   padding: 6px 12px 5px;
   border: 1px dashed currentColor;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1097,7 +1101,7 @@
   z-index: 8;
   max-width: calc(100% - 12px);
   overflow-wrap: anywhere;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: none;
@@ -1119,7 +1123,7 @@ html[data-slots='on'] .art {
   right: 14px;
   bottom: 14px;
   z-index: 9500;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;

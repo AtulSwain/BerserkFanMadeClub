@@ -1,8 +1,8 @@
 import { Page, PageHead, Reveal } from '@/components/Page';
 import { CanonTag } from '@/components/Canon';
 
-const I = '#080808';
-const P = '#f1eee6';
+const I = '#0b0a0a';
+const P = '#efe8da';
 
 /** Original demonstration graphics for each shot type. */
 const SHOTS: { name: string; note: string; draw: JSX.Element; span?: 'wide' | 'tall' | 'full' }[] = [
@@ -61,7 +61,7 @@ const SHOTS: { name: string; note: string; draw: JSX.Element; span?: 'wide' | 't
       <>
         <rect width="300" height="200" fill={P} />
         {Array.from({ length: 30 }, (_, i) => <circle key={i} cx={20 + (i % 10) * 28} cy={40 + Math.floor(i / 10) * 50} r={7} fill={I} />)}
-        <circle cx="150" cy="100" r="11" fill="#7d1111" />
+        <circle cx="150" cy="100" r="11" fill="#8c2425" />
       </>
     ),
   },
@@ -132,7 +132,7 @@ const SHOTS: { name: string; note: string; draw: JSX.Element; span?: 'wide' | 't
         <rect width="300" height="200" fill={P} />
         <path d="M0 150 Q75 110 150 140 T300 120 L300 200 L0 200 Z" fill={I} />
         <circle cx="210" cy="60" r="26" fill={I} />
-        <line x1="150" y1="0" x2="150" y2="200" stroke="#7d1111" strokeWidth="1" strokeDasharray="4 4" />
+        <line x1="150" y1="0" x2="150" y2="200" stroke="#8c2425" strokeWidth="1" strokeDasharray="4 4" />
       </>
     ),
   },

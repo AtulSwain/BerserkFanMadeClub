@@ -40,6 +40,23 @@ VS Code autocompletes the slot names. Without an entry the picture shows “Cred
 - The slot names come from `src/data/slots.ts` — new characters or events get new slots
   automatically; run the checklist task to see them.
 
+## Reference shelf (look, don't copy)
+
+Places to study composition, costume and lighting while drawing your own art. Their images
+belong to their owners — use them as reference only, never drop them into this folder.
+
+- Official anime site — characters, world, specials: <https://berserk-anime.com/>
+- Official portal dictionary: <https://berserk-project.jp/dictionary/character.html>
+- Memorial Edition site: <https://berserk-me.com/>
+- Berserk Wiki character images: <https://berserk.fandom.com/wiki/Category:Character_Images>
+- JoJo Wiki — Berserk manga art: <https://jojowiki.com/Berserk_manga_art>
+- The Art of Mitsuhiro Arita (licensed card art): <https://theartofmitsuhiroarita.com/berserk>
+- 1997 anime screencaps: <https://animehistory.org/>
+- *Berserk Official Guidebook* (Dark Horse, 2019) — digital.darkhorse.com and Google Books
+
+Do not upload or republish manga chapters or scans. For a public site, use licensed or
+promotional assets with permission, commissioned art with permission, or your own original artwork.
+
 ## Copyright
 
 Berserk's manga pages and illustrations belong to Kentaro Miura's estate and Hakusensha.

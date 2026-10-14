@@ -15,8 +15,10 @@
       "propertyNames": {
         "enum": [
           "cover",
-          "cover-a",
-          "cover-b",
+          "home-struggler",
+          "home-golden-age",
+          "home-world",
+          "legacy-miura",
           "origins-miura",
           "index-origins",
           "index-characters",

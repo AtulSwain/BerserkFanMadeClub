@@ -42,9 +42,11 @@ export function listSlots(): Slot[] {
   const out: Slot[] = [];
   const add = (s: Slot) => out.push(s);
 
-  add({ key: 'cover', section: 'Cover', where: 'Big swordsman panel on the cover', page: '/', shape: 'portrait' });
-  add({ key: 'cover-a', section: 'Cover', where: 'Small panel, left (eclipse)', page: '/', shape: 'landscape' });
-  add({ key: 'cover-b', section: 'Cover', where: 'Small panel, right (hawk)', page: '/', shape: 'square' });
+  add({ key: 'cover', section: 'Home', where: 'Hero illustration on the homepage (full height, right side)', page: '/', shape: 'portrait' });
+  add({ key: 'home-struggler', section: 'Home', where: 'Chapter I · The Struggler', page: '/', shape: 'landscape' });
+  add({ key: 'home-golden-age', section: 'Home', where: 'Chapter II · The Golden Age', page: '/', shape: 'landscape' });
+  add({ key: 'home-world', section: 'Home', where: 'Chapter IV · The World of Berserk', page: '/', shape: 'landscape' });
+  add({ key: 'legacy-miura', section: 'Legacy', where: 'Tribute page portrait', page: '/legacy', shape: 'portrait' });
   add({ key: 'origins-miura', section: 'Origins', where: 'Portrait beside the timeline', page: '/origins', shape: 'portrait' });
 
   INDEX.forEach((s, i) => {

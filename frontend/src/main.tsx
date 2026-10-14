@@ -8,6 +8,7 @@ import './styles/base.css';
 import './styles/system.css';
 import './styles/chrome.css';
 import './styles/pages.css';
+import './styles/struggler.css';
 
 // Hash routing for static hosts without SPA fallback (e.g. a single-file preview);
 // path routing under the configured base everywhere else (e.g. GitHub Pages).

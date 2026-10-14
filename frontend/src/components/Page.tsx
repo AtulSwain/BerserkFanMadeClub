@@ -23,13 +23,13 @@ export function Page({ chapter, folio, tone = 'black', children, id, className, 
     <section id={id} className={`page ${toneClass} ${className ?? ''}`} aria-label={label ?? chapter}>
       <header className="running-head" aria-hidden="true">
         <span>
-          <span className="running-head__mark">■</span> Berserk · The Manga Archive
+          <span className="running-head__mark">■</span> Berserk · The Struggler’s Archive
         </span>
         <span>{chapter}</span>
       </header>
       {children}
       <footer className="folio" aria-hidden="true">
-        <span className="roman" style={{ fontSize: 10 }}>Fan archive</span>
+        <span className="roman" style={{ fontSize: 10 }}>Unofficial fan archive</span>
         <span className="folio__num">{String(folio).padStart(3, '0')}</span>
         <span className="roman" style={{ fontSize: 10 }}>{chapter}</span>
       </footer>

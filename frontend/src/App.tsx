@@ -5,6 +5,8 @@ import { InkFilters } from '@/components/Page';
 import Home from '@/pages/Home';
 import { OpenArchiveContext } from '@/context/OpenArchive';
 import { SlotToggle } from '@/components/SlotToggle';
+import { SiteFooter } from '@/components/SiteFooter';
+import { EclipseWipe } from '@/fx/EclipseWipe';
 
 // Every section is its own chunk — the cover loads alone.
 const ArchiveIndex = lazy(() => import('@/pages/ArchiveIndex'));
@@ -31,6 +33,7 @@ const Search = lazy(() => import('@/pages/Search'));
 const Production = lazy(() => import('@/pages/Production'));
 const Sources = lazy(() => import('@/pages/Sources'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+const Legacy = lazy(() => import('@/pages/Legacy'));
 const SearchOverlay = lazy(() => import('@/components/SearchOverlay').then((m) => ({ default: m.SearchOverlay })));
 
 
@@ -47,6 +50,16 @@ export default function App() {
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [splitKey, setSplitKey] = useState(0);
+  const [eclipseKey, setEclipseKey] = useState(0);
+
+  // The one special transition: arriving at the Eclipse.
+  useEffect(() => {
+    if (pathname !== '/events/ev-eclipse') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setEclipseKey((k) => k + 1);
+    const t = setTimeout(() => setEclipseKey(0), 1900);
+    return () => clearTimeout(t);
+  }, [pathname]);
 
   const openArchive = useCallback(
     (to: string) => {
@@ -94,12 +107,21 @@ export default function App() {
       <a href="#main" className="skip-link">Skip to content</a>
       <InkFilters />
       <Nav onSearch={() => setSearchOpen(true)} />
-      <main id="main" key={pathname} className={pathname === '/' ? '' : 'route-enter'}>
+      <main
+        id="main"
+        key={pathname}
+        className={pathname === '/' ? '' : 'route-enter'}
+        onAnimationEnd={(e) => {
+          // Drop the ink-spread mask once it has finished so long pages are never clipped.
+          if (e.target === e.currentTarget && e.animationName === 'ink-spread') e.currentTarget.classList.add('route-enter--done');
+        }}
+      >
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/archive" element={<ArchiveIndex />} />
             <Route path="/origins" element={<Origins />} />
+            <Route path="/legacy" element={<Legacy />} />
             <Route path="/characters" element={<Characters />} />
             <Route path="/characters/:id" element={<CharacterDossier />} />
             <Route path="/relationships" element={<Relationships />} />
@@ -133,6 +155,8 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
+      <SiteFooter />
+      {eclipseKey > 0 && <EclipseWipe key={eclipseKey} />}
       {searchOpen && (
         <Suspense fallback={null}>
           <SearchOverlay open={searchOpen} onClose={closeSearch} />

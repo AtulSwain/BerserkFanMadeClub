@@ -13,8 +13,8 @@ export const PANELS = [
   { id: 'p5', x: 444, y: 588, w: 126, h: 262 },
 ];
 
-const INK = '#080808';
-const PAPER = '#f1eee6';
+const INK = '#0b0a0a';
+const PAPER = '#efe8da';
 
 function Panel({ id, x, y, w, h, children }: { id: string; x: number; y: number; w: number; h: number; children: React.ReactNode }) {
   return (
@@ -75,7 +75,7 @@ export function DemoPage({ mode }: { mode: LabMode | null }) {
             <line key={i} x1={30 + i * 12} y1={588} x2={-120 + i * 12} y2={850} stroke={INK} strokeWidth={i % 3 ? 0.8 : 2} />
           ))}
           <path d="M120 820 L180 700 L240 690 L300 620 L340 640 L330 700 L400 720 L300 760 L260 840 Z" fill={INK} />
-          <circle cx={318} cy={650} r={5} fill="#7d1111" />
+          <circle cx={318} cy={650} r={5} fill="#8c2425" />
         </Panel>
         {/* P5 — silent panel */}
         <Panel {...p5}>

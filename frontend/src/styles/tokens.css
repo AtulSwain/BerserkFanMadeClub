@@ -1,26 +1,29 @@
 /* ─────────────────────────────────────────────────────────────
-   BERSERK ARCHIVE — design tokens
-   Black + white + grayscale + aged paper. Red is an accent only.
+   BERSERK: THE STRUGGLER'S ARCHIVE — design tokens
+   Obsidian black, aged iron, parchment white, dried-blood crimson.
+   Red is rare and meaningful, never a glow on everything.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --ink: #080808;
-  --ink-deep: #111111;
-  --charcoal: #1a1a1a;
-  --graphite: #2a2826;
-  --ash: #5a5650;
-  --smoke: #8a857b;
-  --paper: #d8d2c5;
-  --paper-aged: #beb6a6;
-  --paper-dark: #a69e8d;
-  --white-ink: #f1eee6;
-  --blood: #7d1111;
-  --crimson: #4a0909;
+  --ink: #0b0a0a; /* obsidian */
+  --ink-deep: #121110;
+  --charcoal: #1a1816;
+  --graphite: #24211f; /* aged iron */
+  --ash: #5c564e;
+  --smoke: #8f877a;
+  --paper: #e4dccb; /* parchment */
+  --paper-aged: #cbc0aa;
+  --paper-dark: #ada28c;
+  --white-ink: #efe8da;
+  --blood: #8c2425; /* dried blood */
+  --crimson: #4e1516;
   --gilt: #8c7340; /* historical-connection lines only */
 
   --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
   --font-book: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
   --font-roman: 'Cinzel', 'Cormorant Garamond', serif;
-  --font-body: 'IBM Plex Sans', 'Source Sans 3', system-ui, sans-serif;
+  --font-title: 'Cinzel', 'Cormorant Garamond', Georgia, serif; /* medieval section titles */
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; /* functional UI */
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --font-hand: 'Caveat', 'Bradley Hand', cursive;
 

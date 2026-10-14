@@ -12,7 +12,7 @@ export const TABS: { to: string; label: string; ja: string; no: string; match: s
   { to: '/chronology', label: 'Chronology', ja: '年表', no: '02', match: ['/chronology', '/events'] },
   { to: '/volumes', label: 'Manga', ja: '漫画', no: '12', match: ['/volumes', '/craft', '/panel-lab', '/cinematography'] },
   { to: '/anime', label: 'Anime', ja: 'アニメ', no: '13', match: ['/anime', '/compare', '/music'] },
-  { to: '/production', label: 'Production', ja: '制作', no: '15', match: ['/production', '/origins'] },
+  { to: '/legacy', label: 'Legacy', ja: '遺産', no: '15', match: ['/legacy', '/production', '/origins'] },
 ];
 
 function SpoilerControl({ compact = false }: { compact?: boolean }) {
@@ -55,10 +55,10 @@ export function Nav({ onSearch }: { onSearch: () => void }) {
   return (
     <>
       <nav className={`edge-nav ${isHome ? 'edge-nav--home' : ''}`} aria-label="Archive sections">
-        <Link to="/" className="edge-nav__brand" aria-label="Berserk Archive — cover">
+        <Link to="/" className="edge-nav__brand" aria-label="Berserk: The Struggler’s Archive — cover">
           <span className="edge-nav__sigil" aria-hidden="true" />
           <span>Berserk</span>
-          <span className="edge-nav__brand-sub">Archive</span>
+          <span className="edge-nav__brand-sub">Struggler’s Archive</span>
         </Link>
 
         <ul className="edge-tabs">
@@ -99,7 +99,7 @@ export function Nav({ onSearch }: { onSearch: () => void }) {
               <span>Close</span>
             </button>
           </div>
-          <h2 className="contents-drawer__title">Berserk<br /><em>The Manga Archive</em></h2>
+          <h2 className="contents-drawer__title">Berserk<br /><em>The Struggler’s Archive</em></h2>
           <ol className="contents-drawer__list">
             <li>
               <Link to="/">
